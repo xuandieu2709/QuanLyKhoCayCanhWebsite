@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 
 <head>
     <meta charset="UTF-8">
@@ -40,18 +41,21 @@
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link active" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br> Phiếu nhập</a>
+                        <a class="nav-link active" href="manager-import"><i class="fa fa-book"
+                                aria-hidden="true"></i><br> Phiếu nhập</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link" href="manager-export"><i class="fa fa-paper-plane" aria-hidden="true"></i><br>Phiếu
+                        <a class="nav-link" href="manager-export"><i class="fa fa-paper-plane"
+                                aria-hidden="true"></i><br>Phiếu
                             xuất</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link" href="manager-report"><i class="fa fa-flag" aria-hidden="true"></i><br> Báo cáo</a>
+                        <a class="nav-link" href="manager-report"><i class="fa fa-flag" aria-hidden="true"></i><br> Báo
+                            cáo</a>
                     </div>
                 </li>
             </ul>
@@ -60,272 +64,191 @@
     <!-- END HEADER -->
     <!--  -->
     <div class="container">
-
-        <ul class="nav nav-tabs mt-2 mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#cay"><i class="fa fa-tree"></i><br> Cây
-                    cảnh</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#nhacungcap"><i class="fa fa-truck"
-                        aria-hidden="true"></i><br>
-                    Nhà
-                    cung cấp</a>
-            </li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane active container" id="cay">
-                <div class="row top-body col-12 mb-4">
-                    <div class="col-8 mb-0">
-                        <div class="input-group justify-content-center text-center">
-                            <input class="input-group p-2" type="text">
-                        </div>
-                    </div>
-                    <div class="col-2 justify-content-center d-block">
-                        <button class="btn btn-search btn-group m-2"><i class="fa fa-search"
-                                style="font-size: 20px;"></i></button>
-                    </div>
-                    <div class="col-2 justify-content-center d-block">
-                        <button class="btn btn-info btn-group float-right" data-toggle="modal" data-target="#add">Thêm
-                            mới</button>
+        <h2 class="mt-4" ><i class="fa fa-book"
+            aria-hidden="true"></i> Chi tiết phiếu nhập</h2>
+        <hr class="bg-info mb-2">
+        <div class="tab-pane mt-5 active" id="cay">
+            <div class="row top-body col-12 mb-4">
+                <div class="col-8 mb-0">
+                    <div class="input-group justify-content-center text-center">
+                        <input class="input-group p-2" type="text">
                     </div>
                 </div>
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>hhh</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto" data-toggle="modal" data-target="#edit"><i
-                                        class="fa fa-edit"></i></button></th>
-                            <th><button class="btn btn-danger justify-content-center m-auto" data-toggle="modal" data-target="#remove"><i
-                                        class="fa fa-remove"></i></button></th>
-                        </tr>
-                        <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto" data-toggle="modal" data-target="#edit"><i
-                                class="fa fa-edit"></i></button></th>
-                    <th><button class="btn btn-danger justify-content-center m-auto" data-toggle="modal" data-target="#remove"><i
-                                class="fa fa-remove"></i></button></th>
-                </tr>
-                        <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto"><i
-                                        class="fa fa-edit"></i></button></th>
-                            <th><button class="btn btn-danger justify-content-center m-auto"><i
-                                        class="fa fa-remove"></i></button></th>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="col-2 justify-content-center d-block">
+                    <button class="btn btn-search btn-group m-2"><i class="fa fa-search"
+                            style="font-size: 20px;"></i></button>
+                </div>
+                <div class="col-2 justify-content-center d-block">
+                    <button class="btn btn-info btn-group float-right" data-toggle="modal" data-target="#add">Thêm
+                        mới</button>
+                </div>
             </div>
-            <div class="tab-pane container" id="nhacungcap">
-                <div class="row top-body col-12 mb-4">
-                    <div class="col-8 mb-0">
-                        <div class="input-group justify-content-center text-center">
-                            <input class="input-group p-2" type="text">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nội dung phiếu nhập</th>
+                        <th>Thời gian nhập hàng</th>
+                        <th>Tổng số lượng</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="phieu : ${listPhieu}">
+                        <td th:text="${phieu.tenphieu}"></td>
+                        <td th:text="${phieu.thoigian}"></td> 
+                        <td th:text="${phieu.soluong}"></td>
+                        <td th:text="${#numbers.formatDecimal(phieu.tongtien, 0, 'COMMA', 0, 'POINT')}"></td> 
+                        <td><button class="btn btn-success justify-content-center m-auto"><i
+                                    class="fa fa-info-circle"></i></button></th>
+                        <td><button class="btn btn-warning justify-content-center m-auto" data-toggle="modal"
+                                data-target="#edit"><i class="fa fa-edit"></i></button></th>
+                        <td><button class="btn btn-danger justify-content-center m-auto" data-toggle="modal"
+                                data-target="#remove"><i class="fa fa-remove"></i></button></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- The Modal -->
+        <div class="modal" id="add">
+            <form action="">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="modal-title">Thêm mới</h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                    </div>
-                    <div class="col-2 justify-content-center d-block">
-                        <button class="btn btn-search btn-group m-2"><i class="fa fa-search"
-                                style="font-size: 20px;"></i></button>
-                    </div>
-                    <div class="col-2 justify-content-center d-block">
-                        <button class="btn btn-info btn-group float-right">Thêm mới</button>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button class="btn btn-info" type="submit">Xác nhận</button>
+                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                        </div>
+
                     </div>
                 </div>
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Thay gi k</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto"><i
-                                        class="fa fa-edit"></i></button></th>
-                            <th><button class="btn btn-danger justify-content-center m-auto"><i
-                                        class="fa fa-remove"></i></button></th>
-                        </tr>
-                        <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto"><i
-                                class="fa fa-edit"></i></button></th>
-                    <th><button class="btn btn-danger justify-content-center m-auto"><i
-                                class="fa fa-remove"></i></button></th>
-                        </tr>
-                        <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                            <th><button class="btn btn-warning justify-content-center m-auto"><i
-                                        class="fa fa-edit"></i></button></th>
-                            <th><button class="btn btn-danger justify-content-center m-auto"><i
-                                        class="fa fa-remove"></i></button></th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            </form>
+        </div>
+        <!-- Edit modal -->
+        <!-- The Modal -->
+        <div class="modal" id="edit">
+            <form action="">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
 
-            <!-- The Modal -->
-            <div class="modal" id="add">
-                <form action="">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="modal-title">Chỉnh sửa</h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="modal-title">Thêm mới</h2>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input type="text" class="input-group">
                                 </div>
                             </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
-                            </div>
-
                         </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button class="btn btn-info" type="submit">Xác nhận</button>
+                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                        </div>
+
                     </div>
-                </form>
-            </div>
-            <!-- Edit modal -->
-            <!-- The Modal -->
-            <div class="modal" id="edit">
-                <form action="">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
+                </div>
+            </form>
+        </div>
+        <!--  -->
+        <!-- Remove modal -->
+        <!-- The Modal -->
+        <div class="modal" id="remove">
+            <form action="">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="modal-title">Chỉnh sửa</h2>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="modal-title">Xóa cây cảnh</h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
 
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2 style="color: red;">Bạn có muốn xóa cây cảnh này không</h2>
                                 </div>
                             </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
-                            </div>
-
                         </div>
-                    </div>
-                </form>
-            </div>
-            <!--  -->
-            <!-- Remove modal -->
-            <!-- The Modal -->
-            <div class="modal" id="remove">
-                <form action="">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="modal-title">Xóa cây cảnh</h2>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h2 style="color: red;">Bạn có muốn xóa cây cảnh này không</h2>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
-                            </div>
-
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button class="btn btn-info" type="submit">Xác nhận</button>
+                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
                         </div>
+
                     </div>
-                </form>
-            </div>
-            <!--  -->
-            <!-- Nav tabs -->
+                </div>
+            </form>
+        </div>
+        <!--  -->
+        <!-- Nav tabs -->
 
 </body>
 

@@ -45,7 +45,21 @@ body {
         padding-right: auto;
     }
 }
-
+.container h2{
+    background-color: #17a2b8;
+    color: #ffff;
+    padding: 1%;
+    border: 2px solid;
+}
+.container select{
+    padding: 1%;
+    border: #17a2b8 2px solid;
+    margin-left: 2%;
+    color: #17a2b8;
+}
+.container .col-12 i{
+    font-size: 30px;
+}
 .top-body input {
     border-color: rgb(13, 137, 156);
     border-top: 2px solid rgb(13, 137, 156);
@@ -82,6 +96,9 @@ table button {
 }
 
 /* Tab nav */
+ul.nav.nav-tabs{
+    background-color: #17a2b8;
+}
 .nav.nav-tabs li a.nav-{
     text-decoration: none !important;
     font-size: 12px;
@@ -93,10 +110,11 @@ table button {
 .nav.nav-tabs li a.nav-link.active {
     color: #ffff;
     background-color: rgb(13, 104, 104);
+    border-top: 1px solid rgb(13, 104, 104);;
 }
 .nav.nav-tabs li a.nav-link{
-    color: rgb(12, 126, 92);
-
+    color: #ffff;
+    border-radius: 0;
 }
 .nav.nav-tabs li i{
     font-size: 30px;

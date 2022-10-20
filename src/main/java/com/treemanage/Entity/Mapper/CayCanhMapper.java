@@ -14,7 +14,7 @@ public class CayCanhMapper implements RowMapper<CayCanh>{
         CayCanh cayCanh = new CayCanh();
         cayCanh.setMacay(rs.getInt("macay"));
         cayCanh.setTencay(rs.getString("tencay"));
-        cayCanh.setGiacay(rs.getDouble("giacay"));
+        cayCanh.setGiacay((int)rs.getDouble("giacay"));
         cayCanh.setTonkho(rs.getInt("tonkho"));
         cayCanh.setHinhanh(rs.getString("hinhanh"));
         cayCanh.setMota(rs.getString("mota"));

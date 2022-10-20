@@ -14,8 +14,8 @@
     <div class="login-box">
         <img th:src="@{'/images/logo2.jpg'}" alt="" height="60px" width="60px">
         <h2>Kho cây cảnh</h2>
+        <h4 th:text="${messTB}"></h4>
         <form method="post" th:action="@{/login}">
-            <h4 style="color: red; text-align: center;" th:value="${message}"></h4>
             <div class="user-box">
                 <input type="text" name="taikhoan" id="taikhoan" value="" required="">
                 <label>Tên đăng nhập</label>

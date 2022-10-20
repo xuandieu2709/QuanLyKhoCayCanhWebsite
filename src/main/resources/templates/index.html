@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 
 <head>
     <meta charset="UTF-8">
@@ -34,14 +35,16 @@
             <ul class="navbar-nav">
                 <li class="nav-item active">
                     <div class="row col-12 btn-group">
-                        <a class="nav-link active" href="manager-bonsai"><i class="fa fa-tree" aria-hidden="true"></i><br>
+                        <a class="nav-link active" href="manager-bonsai"><i class="fa fa-tree"
+                                aria-hidden="true"></i><br>
                             Cây
                             cảnh</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br> Phiếu
+                        <a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br>
+                            Phiếu
                             nhập</a>
                     </div>
                 </li>
@@ -64,7 +67,6 @@
     <!-- END HEADER -->
     <!--  -->
     <div class="container">
-
         <ul class="nav nav-tabs mt-2 mb-4">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#cay"><i class="fa fa-tree"></i><br> Cây
@@ -96,6 +98,7 @@
                             mới</button>
                     </div>
                 </div>
+                <hr class="bg-info mb-4">
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -112,7 +115,7 @@
                         <tr th:each="cay : ${listCay}">
                             <td th:text="${number==1}"></td>
                             <td th:text="${cay.tencay}"></td>
-                            <td th:text="${cay.giacay}"></td>
+                            <td th:text="${#numbers.formatDecimal(cay.giacay, 0, 'COMMA', 0, 'POINT')}"></td>
                             <td th:text="${cay.tonkho}"></td>
                             <td><img th:src="@{'${cay.hinhanh}'}" height="50px" width="50px" alt=""></td>
                             <td th:text="${cay.mota}"></td>
@@ -140,6 +143,7 @@
                         <button class="btn btn-info btn-group float-right">Thêm mới</button>
                     </div>
                 </div>
+                <hr class="bg-info mb-4">
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -152,11 +156,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="ncc : ${listNCC}">
-                            <th th:text="${ncc.tennhacungcap}"></th>
-                            <th th:text="${ncc.sodienthoai}"></th>
-                            <th th:text="${ncc.email}"></th>
-                            <th th:text="${ncc.diachi}"></th>
-                            <th th:text="${ncc.ghichu}"></th>
+                            <td th:text="${ncc.tennhacungcap}"></td>
+                            <td th:text="${ncc.sodienthoai}"></td>
+                            <td th:text="${ncc.email}"></td>
+                            <td th:text="${ncc.diachi}"></td>
+                            <td th:text="${ncc.ghichu}"></td>
                             <th><button class="btn btn-warning justify-content-center m-auto"><i
                                         class="fa fa-edit"></i></button></th>
                             <th><button class="btn btn-danger justify-content-center m-auto"><i
