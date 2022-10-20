@@ -7,22 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.treemanage.Entity.taikhoan;
-import com.treemanage.Service.TaiKhoanService;
 
 
 @Controller
-public class LoginController {
-	@Autowired
-	TaiKhoanService taiKhoanService;
+public class LoginController extends Common{
 	
-	@GetMapping("/login")
+	@GetMapping({"/login","/"})
 	public String home() {
 		return "login";
-	}
-	
-	@GetMapping({"/management-bosai","/"})
-	public String homex() {
-		return "manager-bonsai";
 	}
 	
 	@PostMapping("/login")
@@ -33,7 +25,7 @@ public class LoginController {
 			model.addAttribute("message", "Tên đăng nhập hoặc mật khẩu không đúng");
 			return "redirect:/login";
 		}else {
-			return "redirect:/";
+			return "redirect:/manager-bonsai";
 		}
 	}
 }

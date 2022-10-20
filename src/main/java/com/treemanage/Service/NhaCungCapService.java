@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.treemanage.Entity.NhaCungCap;
 
-public interface NhaCupCapService {
+public interface NhaCungCapService {
     List<NhaCungCap> showList();
 }

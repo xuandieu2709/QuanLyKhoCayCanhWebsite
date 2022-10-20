@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.treemanage.Dao.NhaCungCapDao;
 import com.treemanage.Entity.NhaCungCap;
-import com.treemanage.Service.NhaCupCapService;
+import com.treemanage.Service.NhaCungCapService;
 
 @Service
-public class NhaCungCapServiceImp implements NhaCupCapService{
+public class NhaCungCapServiceImp implements NhaCungCapService{
     @Autowired
     NhaCungCapDao nhaCungCapDao;
 
