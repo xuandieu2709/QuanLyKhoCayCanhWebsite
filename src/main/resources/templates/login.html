@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" th:href="@{/css/style-login.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo2.ico}" style="border-radius: 50%;" type="image/x-icon">
+</head>
+
+<body>
+    <div class="login-box">
+        <img th:src="@{'/images/logo2.jpg'}" alt="" height="60px" width="60px">
+        <h2>Kho cây cảnh</h2>
+        <form method="post" th:action="@{/login}">
+            <h4 style="color: red; text-align: center;" th:value="${message}"></h4>
+            <div class="user-box">
+                <input type="text" name="taikhoan" id="taikhoan" value="" required="">
+                <label>Tên đăng nhập</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="matkhau" id="matkhau" value="" required="">
+                <label>Mật khẩu</label>
+            </div>
+            <div class="user-box">
+                <button type="submit"><a type="button">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        Đăng nhập
+                    </a></button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
