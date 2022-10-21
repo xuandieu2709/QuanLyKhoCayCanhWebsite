@@ -3,8 +3,16 @@ package com.treemanage.Service;
 import java.util.List;
 
 import com.treemanage.Entity.PhieuNhap;
-import com.treemanage.Entity.PhieuXuat;
 
 public interface PhieuNhapService {
     List<PhieuNhap> showList();   
+    List<PhieuNhap> findbyId(int id);
+
+    int addImport(PhieuNhap Phieunhap);
+
+    int editImport(PhieuNhap Phieunhap);
+
+    int removeImport(int maphieu);
+
+    List<PhieuNhap> searchImport(String key);
 }

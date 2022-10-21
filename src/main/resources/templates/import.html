@@ -10,15 +10,12 @@
     <link rel="shortcut icon" href="images/logo2.ico" type="image/x-icon">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-
-    <!-- Popper JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/manager.css">
     <title>Phiếu nhập</title>
@@ -64,26 +61,24 @@
     <!-- END HEADER -->
     <!--  -->
     <div class="container">
-        <h2 class="mt-4" ><i class="fa fa-book"
-            aria-hidden="true"></i> Chi tiết phiếu nhập</h2>
+        <h2 class="mt-4"><i class="fa fa-book" aria-hidden="true"></i> Chi tiết phiếu nhập</h2>
         <hr class="bg-info mb-2">
         <div class="tab-pane mt-5 active" id="cay">
             <div class="row top-body col-12 mb-4">
-                <div class="col-8 mb-0">
-                    <div class="input-group justify-content-center text-center">
-                        <input class="input-group p-2" type="text">
+                <div class="col-10">
+                    <div class="input-group text-center">
+                        <input id="keyword" placeholder="Nhập thông tin bạn cần tìm..." th:onkeyup="search()"
+                            class="p-2 col-9 mr-2 mb-0" type="text">
+                        <button id="btnSearch" class="btn btn-search col-1 mb-0"><i class="fa fa-search"
+                                style="font-size: 20px;"></i></button>
                     </div>
                 </div>
-                <div class="col-2 justify-content-center d-block">
-                    <button class="btn btn-search btn-group m-2"><i class="fa fa-search"
-                            style="font-size: 20px;"></i></button>
-                </div>
-                <div class="col-2 justify-content-center d-block">
-                    <button class="btn btn-info btn-group float-right" data-toggle="modal" data-target="#add">Thêm
-                        mới</button>
-                </div>
+                <a id="btnAdd" class="btn btn-info float-right col-2 text-center" data-toggle="modal"><i
+                    class="fa fa-plus-circle" style="font-size: 16px;"></i>
+                <h6 style="font-size: 10px;margin-bottom: 0;">Thêm mới</h6>
+            </a>
             </div>
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" id="listPhieu">
                 <thead>
                     <tr>
                         <th>Nội dung phiếu nhập</th>
@@ -95,15 +90,22 @@
                 <tbody>
                     <tr th:each="phieu : ${listPhieu}">
                         <td th:text="${phieu.tenphieu}"></td>
-                        <td th:text="${phieu.thoigian}"></td> 
+                        <td th:text="${phieu.thoigian}"></td>
                         <td th:text="${phieu.soluong}"></td>
-                        <td th:text="${#numbers.formatDecimal(phieu.tongtien, 0, 'COMMA', 0, 'POINT')}"></td> 
-                        <td><button class="btn btn-success justify-content-center m-auto"><i
-                                    class="fa fa-info-circle"></i></button></th>
-                        <td><button class="btn btn-warning justify-content-center m-auto" data-toggle="modal"
-                                data-target="#edit"><i class="fa fa-edit"></i></button></th>
-                        <td><button class="btn btn-danger justify-content-center m-auto" data-toggle="modal"
-                                data-target="#remove"><i class="fa fa-remove"></i></button></th>
+                        <td th:text="${#numbers.formatDecimal(phieu.tongtien, 0, 'COMMA', 0, 'POINT')}"></td>
+                        <th><a id="btnTableDetails" th:href="@{/manager-import/findImport/(id=${phieu.maphieu})}"
+                                class="btn btn-success justify-content-center m-auto" data-toggle="modal"><i
+                                    class="fa fa-info-circle"></i></a></th>
+                        <th>
+                            <a id="btnTableEdit" th:href="@{/manager-import/findImport/(id=${phieu.maphieu})}"
+                                class="btn btn-warning justify-content-center m-auto" data-toggle="modal"><i
+                                    class="fa fa-edit"></i></a>
+                        </th>
+                        <th>
+                            <a id="btnTableDel" th:href="@{/manager-import/removeImport/(id=${phieu.maphieu})}"
+                                class="btn btn-danger justify-content-center m-auto" data-toggle="modal"><i
+                                    class="fa fa-remove"></i></a>
+                        </th>
                     </tr>
                 </tbody>
             </table>
@@ -111,13 +113,13 @@
 
         <!-- The Modal -->
         <div class="modal" id="add">
-            <form action="">
+            <form method="POST" th:action="@{/manager-import/addImport}">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
 
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h2 class="modal-title">Thêm mới</h2>
+                            <h2 class="modal-title">Thêm mới một phiếu nhập</h2>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -125,28 +127,20 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Nội dung phiếu nhập</h4>
+                                    <input id="tenphieu" name="tenphieu" value="" type="text" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Thời gian nhập hàng</h4>
+                                    <input id="thoigian" name="thoigian" value="" type="date" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Tổng số lượng</h4>
+                                    <input id="soluong" name="soluong" value="" type="number" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
-                                </div>
-                                <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
-                                </div>
-                                <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Tổng tiền</h4>
+                                    <input id="tongtien" name="tongtien" value="" type="number" class="input-group">
                                 </div>
                             </div>
                         </div>
@@ -164,42 +158,38 @@
         <!-- Edit modal -->
         <!-- The Modal -->
         <div class="modal" id="edit">
-            <form action="">
+            <form id="formEdit" method="POST" th:action="@{/manager-import/editImport}">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
 
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h2 class="modal-title">Chỉnh sửa</h2>
+                            <h2 class="modal-title">Chỉnh sửa thông tin phiếu</h2>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                <div class="col-12" hidden>
+                                    <h4>Mã phiếu</h4>
+                                    <input id="maphieu" name="maphieu" value="" type="text" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Nội dung phiếu nhập</h4>
+                                    <input id="tenphieu" name="tenphieu" value="" type="text" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Thời gian nhập hàng</h4>
+                                    <input id="thoigian" name="thoigian" value="" type="date" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Tổng số lượng</h4>
+                                    <input id="soluong" name="soluong" value="" type="number" class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
-                                </div>
-                                <div class="col-12">
-                                    <h4>Tên cây cảnh</h4>
-                                    <input type="text" class="input-group">
+                                    <h4>Tổng tiền</h4>
+                                    <input id="tongtien" name="tongtien" value="" type="number" class="input-group">
                                 </div>
                             </div>
                         </div>
@@ -224,7 +214,7 @@
 
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h2 class="modal-title">Xóa cây cảnh</h2>
+                            <h2 class="modal-title">Xóa phiếu nhập</h2>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -232,7 +222,50 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <h2 style="color: red;">Bạn có muốn xóa cây cảnh này không</h2>
+                                    <h2 style="color: red;">Bạn có muốn xóa phiếu nhập này không?</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <a class="btn btn-info" id="btnDel" type="submit">Xác nhận</a>
+                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Details  -->
+        <div class="modal" id="details">
+            <form id="formDetails" action="">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="modal-title">Chi tiết phiếu nhập</h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Nội dung phiếu nhập</h4>
+                                    <input id="tenphieu" name="tenphieu" value="" type="text" readonly class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Thời gian nhập hàng</h4>
+                                    <input id="thoigian" name="thoigian" value="" type="date" readonly class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tổng số lượng</h4>
+                                    <input id="soluong" name="soluong" value="" type="number" readonly class="input-group">
+                                </div>
+                                <div class="col-12">
+                                    <h4>Tổng tiền</h4>
+                                    <input id="tongtien" name="tongtien" value="" type="number" readonly class="input-group">
                                 </div>
                             </div>
                         </div>
@@ -247,8 +280,81 @@
                 </div>
             </form>
         </div>
-        <!--  -->
         <!-- Nav tabs -->
+
+        <script>
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+
+                $('#btnAdd').on('click', function (event) {
+                    event.preventDefault();
+                    var href = $(this).attr('href');
+                    // var text = $(this).text(); //return New or Edit addAccount
+                    $('#add #tenphieu').val('');
+                    $('#add #thoigian').val('');
+                    $('#add #soluong').val('');
+                    $('#add #tongtien').val('');
+                    $('#add').modal();
+                });
+
+                $('.table #btnTableEdit').on('click', function (event) {
+                    event.preventDefault();
+                    var href = $(this).attr('href');
+                    $.get(href, function (phieuNhap, status) {
+                        $('#formEdit #maphieu').val(phieuNhap.maphieu);
+                        $('#formEdit #tenphieu').val(phieuNhap.tenphieu);
+                        $('#formEdit #thoigian').val(phieuNhap.thoigian);
+                        $('#formEdit #soluong').val(phieuNhap.soluong);
+                        $('#formEdit #tongtien').val(phieuNhap.tongtien);
+                    });
+                    $('#edit').modal(); // id modal
+                });
+
+                $('.table #btnTableDel').on('click', function (event) {
+                    event.preventDefault();
+                    var href = $(this).attr('href'); // Phương thức attr () đặt hoặc trả về các thuộc tính và giá trị của các phần tử đã chọn.
+                    $('#remove #btnDel').attr('href', href); //btnDel id òf button in modal form
+                    $('#remove').modal(); // id modal
+                });
+
+                // details
+                $('.table #btnTableDetails').on('click', function (event) {
+                    event.preventDefault();
+                    var href = $(this).attr('href');
+                    $.get(href, function (phieuNhap, status) {
+                        $('#formDetails #maphieu').val(phieuNhap.maphieu);
+                        $('#formDetails #tenphieu').val(phieuNhap.tenphieu);
+                        $('#formDetails #thoigian').val(phieuNhap.thoigian);
+                        $('#formDetails #soluong').val(phieuNhap.soluong);
+                        $('#formDetails #tongtien').val(phieuNhap.tongtien);
+                    });
+                    $('#details').modal(); // id modal
+                });
+                // btn search
+                $('#btnSearch').on('click', function (event) {
+                    var key = $('#keyword').val();
+                    if(key === null || key === ""){
+                        alert("Hãy nhập gì đó vào thanh tìm kiếm!");
+                    }
+                });
+            });
+            function search() {
+                var key = $('#keyword').val();
+                setTimeout(1000);
+                $.ajax({
+                    type: "POST",
+                    url: "/manager-import/search",
+                    data: "keyword=" + key,
+                    success: function (data) {
+                        $('#listPhieu').replaceWith(data);
+                        $('#keyword').val(key);
+                    },
+                    error: function (data) {
+                        alert("lỗi!");
+                    }
+                });
+            }
+        </script>
 
 </body>
 

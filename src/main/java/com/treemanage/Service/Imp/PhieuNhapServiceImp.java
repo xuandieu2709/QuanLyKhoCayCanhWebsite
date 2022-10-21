@@ -18,4 +18,29 @@ public class PhieuNhapServiceImp implements PhieuNhapService{
     public List<PhieuNhap> showList(){
         return phieuNhapDao.showList();
     }
+
+    @Override
+    public List<PhieuNhap> findbyId(int id){
+        return phieuNhapDao.findbyId(id);
+    }
+
+    @Override
+    public int addImport(PhieuNhap PhieuNhap){
+        return phieuNhapDao.addImport(PhieuNhap);
+    }
+
+    @Override
+    public int editImport(PhieuNhap PhieuNhap){
+        return phieuNhapDao.editImport(PhieuNhap);
+    }
+
+    @Override
+    public int removeImport(int maphieu){
+        return phieuNhapDao.removeImport(maphieu);
+    }
+
+    @Override
+    public List<PhieuNhap> searchImport(String key){
+        return phieuNhapDao.searchImport(key);  
+    }
 }

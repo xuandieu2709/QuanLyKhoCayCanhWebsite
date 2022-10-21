@@ -11,6 +11,10 @@ public class Phieu {
     public Phieu() {
     }
 
+    public Phieu(int maphieu) {
+        this.maphieu = maphieu;
+    }
+
     public Phieu(int maphieu, String tenphieu, String thoigian, int soluong, double tongtien) {
         this.maphieu = maphieu;
         this.tenphieu = tenphieu;

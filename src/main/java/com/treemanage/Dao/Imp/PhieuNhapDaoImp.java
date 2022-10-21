@@ -22,4 +22,41 @@ public class PhieuNhapDaoImp implements PhieuNhapDao {
         List<PhieuNhap> list = jdbcTemplate.query(sql, new PhieuNhapMapper());
         return list;
     }
+
+    @Override
+    public List<PhieuNhap> findbyId(int id){
+        String sql = "Select * from phieunhap Where maphieunhap ="+id+"";
+        List<PhieuNhap> list = jdbcTemplate.query(sql, new PhieuNhapMapper());
+        if(list.size()>0){
+            return list;
+        }else{
+        return null;
+        }
+
+    }
+    @Override
+    public int addImport(PhieuNhap phieunhap) {
+        String sql = "INSERT INTO `quanlykhocaycanh`.`phieunhap`(`tenphieunhap`,`ngaynhap`,`tongsoluong`,`tongtien`) VALUES(?,?,?,?)";
+        return jdbcTemplate.update(sql, new Object[] { phieunhap.getTenphieu(), phieunhap.getThoigian(),
+                phieunhap.getSoluong(), phieunhap.getTongtien() });
+    }
+
+    @Override
+    public int editImport(PhieuNhap phieunhap) {
+        String sql = "UPDATE `quanlykhocaycanh`.`phieunhap` SET `tenphieunhap` = ?,`ngaynhap` = ?,`tongsoluong` = ?,`tongtien` = ? WHERE `maphieunhap` = ?";
+        return jdbcTemplate.update(sql, new Object[] { phieunhap.getTenphieu(), phieunhap.getThoigian(),
+                phieunhap.getSoluong(), phieunhap.getTongtien(), phieunhap.getMaphieu() });
+    }
+
+    @Override
+    public int removeImport(int maphieu) {
+        String sql = "DELETE FROM `quanlykhocaycanh`.`phieunhap` WHERE maphieunhap= " + maphieu + ";";
+        return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<PhieuNhap> searchImport(String key){
+        String sql = "SELECT * FROM phieunhap where concat_ws('',tenphieunhap,ngaynhap,tongsoluong,tongtien) like '%"+key+"%';";
+        return jdbcTemplate.query(sql, new PhieuNhapMapper());
+    }
 }

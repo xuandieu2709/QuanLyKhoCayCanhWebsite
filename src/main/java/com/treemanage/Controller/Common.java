@@ -13,6 +13,9 @@ import com.treemanage.Service.TaiKhoanService;
 
 public class Common {
 
+    
+    ModelAndView mv = new ModelAndView();
+    
     @Autowired
     TaiKhoanService taiKhoanService;
 

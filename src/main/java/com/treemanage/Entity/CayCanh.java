@@ -13,6 +13,10 @@ public class CayCanh extends LoaiCay{
     public CayCanh() {
     }
 
+    public CayCanh(int macay) {
+        this.macay = macay;
+    }
+
     public CayCanh(int macay, String tencay, double giacay, int tonkho, String hinhanh, String mota, String dvt) {
         this.macay = macay;
         this.tencay = tencay;

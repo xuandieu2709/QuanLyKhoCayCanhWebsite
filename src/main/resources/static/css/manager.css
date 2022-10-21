@@ -45,7 +45,7 @@ body {
         padding-right: auto;
     }
 }
-.container h2{
+.container h2.mt-4{
     background-color: #17a2b8;
     color: #ffff;
     padding: 1%;
