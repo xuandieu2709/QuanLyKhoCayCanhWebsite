@@ -15,4 +15,6 @@ public interface PhieuNhapService {
     int removeImport(int maphieu);
 
     List<PhieuNhap> searchImport(String key);
+
+    List<PhieuNhap> findFinalInsert();
 }

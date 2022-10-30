@@ -23,4 +23,15 @@ public class CTPhieuNhapServiceImp implements CTPhieuNhapService {
     public int insertDetailsTicket(ChiTietPhieuNhap chiTietPhieuNhap) {
         return ctPhieuNhapDao.insertDetailsTicket(chiTietPhieuNhap);
     }
+
+    @Override
+    public int updateDetailsTicket(ChiTietPhieuNhap chiTietPhieuNhap){
+        return ctPhieuNhapDao.updateDetailsTicket(chiTietPhieuNhap);
+    }
+    
+
+    @Override
+    public int deleteDetailsTicket(int id){
+        return ctPhieuNhapDao.deleteDetailsTicket(id);
+    }
 }

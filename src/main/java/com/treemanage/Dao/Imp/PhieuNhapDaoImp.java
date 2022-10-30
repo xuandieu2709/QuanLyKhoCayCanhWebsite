@@ -59,4 +59,10 @@ public class PhieuNhapDaoImp implements PhieuNhapDao {
         String sql = "SELECT * FROM phieunhap where concat_ws('',tenphieunhap,ngaynhap,tongsoluong,tongtien) like '%"+key+"%';";
         return jdbcTemplate.query(sql, new PhieuNhapMapper());
     }
+
+    @Override
+    public List<PhieuNhap> findFinalInsert(){
+        String sql = "SELECT * FROM quanlykhocaycanh.phieunhap order by maphieunhap desc limit 1; ";
+        return jdbcTemplate.query(sql, new PhieuNhapMapper());
+    }
 }

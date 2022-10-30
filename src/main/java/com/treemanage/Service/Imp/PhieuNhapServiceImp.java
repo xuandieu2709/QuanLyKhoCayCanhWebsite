@@ -43,4 +43,8 @@ public class PhieuNhapServiceImp implements PhieuNhapService{
     public List<PhieuNhap> searchImport(String key){
         return phieuNhapDao.searchImport(key);  
     }
+    @Override
+    public List<PhieuNhap> findFinalInsert(){
+        return phieuNhapDao.findFinalInsert();
+    }
 }

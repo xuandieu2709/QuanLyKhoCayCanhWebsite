@@ -6,4 +6,6 @@ import com.treemanage.Entity.taikhoan;
 
 public interface TaiKhoanService {
 	taikhoan dangnhap(String taikhoan,String matkhau);
+
+	boolean CheckAccount(String taikhoan, String matkhau);
 }

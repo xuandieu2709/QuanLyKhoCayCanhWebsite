@@ -18,4 +18,19 @@ public class NhaCungCapServiceImp implements NhaCungCapService{
     public List<NhaCungCap> showList(){
         return nhaCungCapDao.showList(); 
     }
+    public int add(NhaCungCap nhacungcap) {
+    	return nhaCungCapDao.add(nhacungcap);
+    }
+    public int delete(int manhacungcap) {
+    	return nhaCungCapDao.delete(manhacungcap);
+    }
+    public NhaCungCap findOne(int manhacungcap) {
+    	return nhaCungCapDao.findOne(manhacungcap);
+    }
+	public int update(NhaCungCap nhacungcap) {
+		return nhaCungCapDao.update(nhacungcap);
+	}
+	public List<NhaCungCap> findlistbyname(String tennhacungcap){
+		return nhaCungCapDao.findlistbyname(tennhacungcap);
+	}
 }

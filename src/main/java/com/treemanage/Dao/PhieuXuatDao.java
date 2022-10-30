@@ -16,4 +16,6 @@ public interface PhieuXuatDao {
     int removeExport(int maphieu);
 
     List<PhieuXuat> searchExport(String key);
+
+    List<PhieuXuat> FindLastID();
 }

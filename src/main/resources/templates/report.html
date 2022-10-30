@@ -10,8 +10,7 @@
     <link rel="shortcut icon" href="images/logo2.ico" type="image/x-icon">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.js"
-        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="jquery-3.6.0.js"></script>
     <!-- Popper JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
@@ -40,18 +39,21 @@
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br> Phiếu nhập</a>
+                        <a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br>
+                            Phiếu nhập</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link" href="manager-export"><i class="fa fa-paper-plane" aria-hidden="true"></i><br>Phiếu
+                        <a class="nav-link" href="manager-export"><i class="fa fa-paper-plane"
+                                aria-hidden="true"></i><br>Phiếu
                             xuất</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div class="row col-12">
-                        <a class="nav-link active" href="manager-report"><i class="fa fa-flag" aria-hidden="true"></i><br> Báo cáo</a>
+                        <a class="nav-link active" href="manager-report"><i class="fa fa-flag"
+                                aria-hidden="true"></i><br> Báo cáo</a>
                     </div>
                 </li>
             </ul>
@@ -60,9 +62,9 @@
     <!-- END HEADER -->
     <!--  -->
     <div class="container">
-        <h2 class="mt-4" ><i class="fa fa-flag"
-            aria-hidden="true"></i> Chi tiết báo cáo</h2>
+        <h2 class="mt-4"><i class="fa fa-flag" aria-hidden="true"></i> Chi tiết báo cáo</h2>
         <hr class="bg-info mb-2">
+
         <!-- <div class="row">
             <div class="col-12">
                 <i class="fa fa-sort" aria-hidden="true"></i> <select class="" name="" id="">
@@ -77,176 +79,341 @@
                 <div class="row top-body col-12 mb-4">
                     <div class="col-10">
                         <div class="input-group text-center">
-                            <input class="p-2 col-9 mr-2 mb-0" type="text">
-                            <button class="btn btn-search col-1 mb-0"><i class="fa fa-search"
+                            <input id="keyword" placeholder="Nhập thông tin bạn cần tìm..." th:onkeyup="search()"
+                                class="p-2 col-9 mr-2 mb-0" type="text">
+                            <button id="btnSearch" class="btn btn-search col-1 mb-0"><i class="fa fa-search"
                                     style="font-size: 20px;"></i></button>
                         </div>
                     </div>
-                    <button class="btn btn-info float-right col-2 text-center" data-toggle="modal" data-target="#add"><i
-                            class="fa fa-plus-circle" style="font-size: 16px;"></i>
-                        <h6 style="font-size: 10px;margin-bottom: 0;">Thêm mới</h6>
+                    <button id="showdiv" class="btn btn-info float-right col-2 text-center"><i class="fa fa-plus-circle"
+                            style="font-size: 16px;"></i>
+                        <h6 style="font-size: 10px;margin-bottom: 0;">Tạo mới</h6>
                     </button>
                 </div>
-                <table class="table table-bordered table-hover">
+                <script>
+                    $(document).ready(function () {
+                        $('div #formreport').hide();
+                        $('#selectTwo').hide();
+                        $('#divDate').hide();
+                        $('#divDate1').hide();
+                        $('#divYear').hide();
+                        // div date month year
+                        // 
+                        $('#showdiv').on('click', function (event) {
+                            $('div #formreport').toggle();
+                        });
+                        // search alert
+                        $('#btnSearch').on('click', function (event) {
+                            var key = $('#keyword').val();
+                            if (key === null || key === "") {
+                                alert("Hãy nhập gì đó vào thanh tìm kiếm!");
+                            }
+                        });
+                        // if($('#selectOne option:selected').val('0')){
+                        // $('#divDate').hide();
+                        // $('#divDate1').hide();
+                        // $('#divYear').hide(); 
+                        // }else{
+                        //     $('#divDate').show();
+                        //     $('#divYear').show();
+                        //     $('#divDate1').show();
+                        // }
+                        $('#selectOne option:selected').on('selected', function (event) {
+
+                        });
+                        $('#btnCreateRP').on('click', function (event) {
+                            if ($('#selectOne').val() == '2') {
+                                console.log($('#selectOne option:selected').val());
+                                createReport();
+                                $('div #formreport').hide();
+                            } else if ($('#selectOne').val() == '1') {
+                                console.log($('#selectOne option:selected').val());
+                                alert('Bạn đã chọn bán chạy');
+                            } else {
+                                console.log($('#selectOne option:selected').val());
+                                alert('Hãy chọn loại báo cáo trước khi tạo!');
+                            }
+                        });
+                    });
+                    function createReport() {
+                        $.ajax({
+                            type: "POST",
+                            url: "/manager-report/createReport",
+                            success: function (data) {
+                                alert('Tạo báo cáo thành công');
+                                $('#listRP').replaceWith(data);
+                            },
+                            error: function (data) {
+                                alert('Lỗi!\n Tạo báo cáo thất bại');
+                            }
+                        });
+                    }
+                    function search() {
+                        var key = $('#keyword').val();
+                        setTimeout(1000);
+                        $.ajax({
+                            type: "POST",
+                            url: "/manager-report/searchReport",
+                            data: "keyword=" + key,
+                            success: function (data) {
+                                
+                                $('#listRP').replaceWith(data);
+                                $('#keyword').val(key);
+                            },
+                            error: function (data) {
+                                alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
+                            }
+                        });
+                    }
+                </script>
+                <div class="row bg-info mt-1 mb-2 col-12" id="formreport">
+                    <div class="col-6">
+                        <i class="fa fa-database text-light" aria-hidden="true"></i>
+                        <select id="selectOne" class="mt-2 mb-2 form-select bg-danger text-light">
+                            <option value="0" disabled selected>-- Lựa chọn --</option>
+                            <option value="1">Bán chạy nhất</option>
+                            <option value="2">Hàng tồn</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <select id="selectTwo" class="form-select mt-2 mb-2 bg-danger text-light">
+                            <option value="0" disabled selected>-- Lựa chọn --</option>
+                            <option id="otpdate" value="1">Ngày</option>
+                            <option id="otpmonth" value="2">Tháng</option>
+                            <option id="otpyear" value="3">Năm</option>
+                        </select>
+                    </div>
+                    <div class="col-6 mt-2 mb-2" id="divDate">
+                        <label for="" class="text-light">Từ:</label>
+                        <input type="date" class="input-group border-info mt-2 mb-2 pt-1 pb-1">
+                    </div>
+                    <div class="col-6 mt-2 mb-2" id="divDate1">
+                        <label for="" class="text-light">Đến:</label>
+                        <input type="date" class="input-group border-info mt-2 mb-2 pt-1 pb-1">
+                    </div>
+                    <div class="col-6 mt-2 mb-2" id="divYear">
+                        <label for="" class="text-light">Mời nhập Năm:</label>
+                        <input type="number" min="2010" max="2100" class="input-group border-info mt-2 mb-2 pt-1 pb-1">
+                    </div>
+                    <div class="col-12 m-2 mt-5 justify-content-center float-right">
+                        <button style="border-radius: 5px;" id="btnCreateRP"
+                            class="p-2 btn-group btnbtn btn-success text-center"><i class="fa fa-file-archive-o"
+                                aria-hidden="true"></i>&nbsp; Tạo</button>
+                    </div>
+                </div>
+                <table class="table table-bordered table-hover" id="tableRP">
                     <thead>
                         <tr>
-                            <th>Ngày báo cáo</th>
+                            <th>STT</th>
                             <th>Nội dung báo cáo</th>
+                            <th>Ngày báo cáo</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="listRP">
                         <tr th:each="baocao : ${list}">
-                            <td th:text="${baocao.ngaybaocao}"></td>
+                            <td th:text="${(baocaoStat.index)+1}"></td>
                             <td th:text="${baocao.noidung}"></td>
-                            <th ><button class="btn btn-info justify-content-center m-auto">Xuất Excels</button></th>
-                            <th ><button class="btn btn-success justify-content-center m-auto"><i class="fa fa-info-circle"></i></button></th>
-                            <th><button class="btn btn-warning justify-content-center m-auto" data-toggle="modal" data-target="#edit"><i
-                                        class="fa fa-edit"></i></button></th>
-                            <th><button class="btn btn-danger justify-content-center m-auto" data-toggle="modal" data-target="#remove"><i
-                                        class="fa fa-remove"></i></button></th>
+                            <td th:text="${baocao.ngaybaocao}"></td>
+                            <th><button id="btnTableDetails" th:onclick="'showmodalDetails('+${baocao.mabaocao}+')'"
+                                    class="btn btn-warning justify-content-center m-auto" data-toggle="modal"
+                                    data-target="#details"><i class="fa fa-info-circle"></i></button></th>
+                            <th><button th:onclick="'return removeRP('+${baocao.mabaocao}+')'"
+                                    class="btn btn-danger justify-content-center m-auto" data-toggle="modal"
+                                    data-target="#remove"><i class="fa fa-remove"></i></button></th>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- The Modal -->
-            <div class="modal" id="add">
+            <div class="modal" id="details">
                 <form action="">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
 
                             <!-- Modal Header -->
                             <div class="modal-header">
-                                <h2 class="modal-title">Thêm mới</h2>
+                                <h2 class="modal-title">Chi tiết báo cáo</h2>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
 
                             <!-- Modal body -->
-                            <div class="modal-body">
+                            <div class="modal-body" th:each="baocao : ${baocao}" id="listCT">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
+                                    <div class="col-6">
+                                        <a th:href="@{/export/excel/inventory/(id=${baocao.mabaocao})}"
+                                            class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
+                                            title="Xuất file excels" type="button"><i class="fa fa-file-excel-o"
+                                                aria-hidden="true"></i> Exels</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a th:href="@{/export/pdf/inventory/(id=${baocao.mabaocao})}"
+                                            class="btn btn-warning float-right" data-toggle="tooltip"
+                                            data-placement="bottom" title="Xuất file pdf" type="button"><i
+                                                class="fa fa-file-pdf-o" aria-hidden="true"></i> Pdf</a>
+                                    </div>
+                                    <div class="col-12" hidden>
+                                        <h4>Mã báo cáo</h4>
+                                        <input th:value="${baocao.mabaocao}" id="mabaocao" name="mabaocao" value=""
+                                            type="text" class="input-group" readonly>
                                     </div>
                                     <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
+                                        <h4>Nội dung báo cáo</h4>
+                                        <input th:value="${baocao.noidung}" id="noidung" name="noidung" value=""
+                                            type="text" class="input-group" readonly>
                                     </div>
                                     <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
+                                        <h4>Thời gian báo cáo</h4>
+                                        <input th:value="${baocao.ngaybaocao}" id="ngaybaocao" name="ngaybaocao"
+                                            value="" type="datetime" class="input-group" readonly>
+                                    </div>
+                                </div>
+                                <div class="row listct" th:each="ctbaocao : ${listCT}">
+                                    <!-- <div class="col-6">
+                                        <h4>STT</h4>
+                                        <input th:value="${listCT.size()}" value="" type="text" readonly
+                                            class="input-group">
+                                    </div> -->
+                                    <div class="col-6" hidden>
+                                        <h4>Mã chi tiết</h4>
+                                        <input th:value="${ctbaocao.machitiet}" value="" type="text" readonly
+                                            class="input-group">
+                                    </div>
+                                    <div class="col-6">
+                                        <h4>Mã báo cáo</h4>
+                                        <input th:value="${ctbaocao.maphieu}" value="" type="text" readonly
+                                            class="input-group">
+                                    </div>
+                                    <div class="col-6">
+                                        <h4>Mã cây</h4>
+                                        <input th:value="${ctbaocao.macay}" value="" type="text" readonly
+                                            class="input-group">
+                                    </div>
+                                    <div class="col-6">
+                                        <h4>Giá</h4>
+                                        <input
+                                            th:value="${#numbers.formatDecimal(ctbaocao.gia, 0, 'COMMA', 0, 'POINT')}"
+                                            value="" type="text" readonly class="input-group">
+                                    </div>
+
+                                    <div class="col-6">
+                                        <h4>Số lượng</h4>
+                                        <input th:value="${ctbaocao.soluong}" value="" type="number" readonly
+                                            class="input-group">
+                                    </div>
+                                    <div class="col-6" hidden>
+                                        <h4>Thành tiền</h4>
+                                        <input
+                                            th:value="${#numbers.formatDecimal(ctbaocao.thanhtien, 0, 'COMMA', 0, 'POINT')}"
+                                            value="" type="text" readonly class="input-group">
                                     </div>
                                     <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
+                                        <hr class="bg-danger mt-2 mb-2">
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                                <button class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Hủy"
+                                    data-dismiss="modal" type="button">Đóng</button>
+
                             </div>
 
                         </div>
                     </div>
                 </form>
             </div>
+            <script>
+                function removeRP(id) {
+                    if (confirm('Toàn bộ thông tin về báo cáo sẽ bị xóa!\n Bạn có muốn xóa không?')) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/manager-report/removeReport",
+                            data: "id=" + id,
+                            success: function (data) {
+                                console.log(id);
+                                $('#tableRP').replaceWith(data);
+                                alert('Xóa thành công!')
+                            },
+                            error: function (data) {
+                                alert('Lỗi!\nXóa thất bại.');
+                            }
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+
+                    // if (jQuery('#btnRemoveRP').data('clicked')) {
+                    //     console.log(id);
+
+                    // } else {
+                    //     //run function2
+                    // }
+                }
+
+                function showmodalDetails(id) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/manager-report/detailsReport",
+                        data: "id=" + id,
+                        success: function (data) {
+                            console.log(id);
+                            $('#listCT').replaceWith(data);
+                        },
+                        error: function (data) {
+                            alert('Có gì đó không đúng!\n Vui lòng thử lại sau.');
+                        }
+                    });
+                }
+                // function exportInventoryToExcels(id) {
+                //     $.ajax({
+                //         type: "Get",
+                //         url: "/export/excel/inventory",
+                //         data: "id=" + id,
+                //         success: function (data) {
+                //             alert('Xuất file excels thành công!');
+                //         },
+                //         error: function (data) {
+                //             alert('Lỗi!\nXuất file excels thất bại.');
+                //         }
+                //     });
+                // }
+            </script>
             <!-- Edit modal -->
-            <!-- The Modal -->
-            <div class="modal" id="edit">
-                <form action="">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="modal-title">Chỉnh sửa</h2>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                    <div class="col-12">
-                                        <h4>Tên cây cảnh</h4>
-                                        <input type="text" class="input-group">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-            </div>
             <!--  -->
             <!-- Remove modal -->
             <!-- The Modal -->
-            <div class="modal" id="remove">
-                <form action="">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
+            <!-- <div class="modal" id="remove">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="modal-title">Xóa cây cảnh</h2>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
+                         Modal Header 
+                        <div class="modal-header">
+                            <h2 class="modal-title">Xóa báo cáo</h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
 
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h2 style="color: red;">Bạn có muốn xóa cây cảnh này không</h2>
-                                    </div>
+                        Modal body 
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2 style="color: red;">Toàn bộ thông tin về báo cáo sẽ bị xóa!<br>Bạn có muốn
+                                        xóa không?</h2>
                                 </div>
                             </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button class="btn btn-info" type="submit">Xác nhận</button>
-                                <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
-                            </div>
-
                         </div>
+
+                        Modal footer 
+                        <div class="modal-footer">
+                            <button id="btnRemoveRP" class="btn btn-info" type="button">Xác nhận</button>
+                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                        </div>
+
                     </div>
-                </form>
-            </div>
+                </div>
+            </div> -->
             <!--  -->
             <!-- Nav tabs -->
 

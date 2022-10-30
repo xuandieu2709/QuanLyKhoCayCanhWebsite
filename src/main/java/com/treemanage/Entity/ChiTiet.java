@@ -11,6 +11,8 @@ public class ChiTiet extends Phieu {
     public ChiTiet() {
     }
 
+    
+
     public ChiTiet(int machitiet, int maphieu, int macay, int soluong, double gia, double thanhtien) {
         super(maphieu);
         this.machitiet = machitiet;
@@ -28,6 +30,10 @@ public class ChiTiet extends Phieu {
         this.soluong = soluong;
         this.gia = gia;
         this.thanhtien = thanhtien;
+    }
+
+    public ChiTiet(int ma){
+        this.machitiet = ma;
     }
 
     public int getMachitiet() {

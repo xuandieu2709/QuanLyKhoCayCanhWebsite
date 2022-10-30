@@ -42,4 +42,9 @@ public class PhieuXuatServiceImp implements PhieuXuatService {
     public List<PhieuXuat> searchExport(String key){
         return phieuXuatDao.searchExport(key);  
     }
+
+    @Override
+    public PhieuXuat FindLastID(){
+        return phieuXuatDao.FindLastID().get(0);
+    }
 }

@@ -134,3 +134,10 @@ ul.nav.nav-tabs{
 .modal .modal-body input{
     padding: 1% 1%;
 }
+
+.row .listct{
+    font-size: 18px;
+}
+.row.listct h4{
+    font-size: 18px;
+}

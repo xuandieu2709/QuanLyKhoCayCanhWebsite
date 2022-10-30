@@ -19,4 +19,9 @@ public class TaiKhoanServiceImp implements TaiKhoanService{
 	public taikhoan dangnhap(String taikhoan,String matkhau){
 		return taikhoanDao.dangnhap(taikhoan, matkhau).get(0);
 	}
+
+	@Override
+	public boolean CheckAccount(String taikhoan, String matkhau){
+		return taikhoanDao.CheckAccount(taikhoan, matkhau);
+	}
 }

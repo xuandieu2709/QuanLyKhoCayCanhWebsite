@@ -6,6 +6,7 @@ import com.treemanage.Entity.PhieuNhap;
 
 public interface PhieuNhapDao {
     List<PhieuNhap> showList();
+
     List<PhieuNhap> findbyId(int id);
 
     int addImport(PhieuNhap phieunhap);
@@ -15,4 +16,6 @@ public interface PhieuNhapDao {
     int removeImport(int maphieu);
 
     List<PhieuNhap> searchImport(String key);
+
+    List<PhieuNhap> findFinalInsert();
 }

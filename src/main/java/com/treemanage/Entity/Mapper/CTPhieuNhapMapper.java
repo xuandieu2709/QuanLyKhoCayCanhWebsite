@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.treemanage.Entity.ChiTietPhieuNhap;
 
-public class CTPhieuNhapMapper implements RowMapper{
+public class CTPhieuNhapMapper implements RowMapper<ChiTietPhieuNhap>{
 
     @Override
     public ChiTietPhieuNhap mapRow(ResultSet rs, int rowNum) throws SQLException {

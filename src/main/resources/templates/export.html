@@ -68,20 +68,22 @@
             <div class="row top-body col-12 mb-4">
                 <div class="col-10">
                     <!-- <form th:action="@{/manager-export/search}" method="post"> -->
-                        <div class="input-group text-center">
-                            <input id="keyword" placeholder="Nhập thông tin bạn cần tìm..." th:onkeyup="search()" class="p-2 col-9 mr-2 mb-0" type="text">
-                            <button id="btnSearch" class="btn btn-search col-1 mb-0"><i class="fa fa-search"
-                                    style="font-size: 20px;"></i></button>
-                        </div>
+                    <div class="input-group text-center">
+                        <input id="keyword" placeholder="Nhập thông tin bạn cần tìm..." th:onkeyup="search()"
+                            class="p-2 col-9 mr-2 mb-0" type="text">
+                        <button id="btnSearch" class="btn btn-search col-1 mb-0"><i class="fa fa-search"
+                                style="font-size: 20px;"></i></button>
+                    </div>
                 </div>
-                <a id="btnAdd" class="btn btn-info float-right col-2 text-center" data-toggle="modal"><i
-                        class="fa fa-plus-circle" style="font-size: 16px;"></i>
+                <button id="btnAdd" class="btn btn-info float-right col-2 text-center" data-toggle="modal"
+                    data-target="#add"><i class="fa fa-plus-circle" style="font-size: 16px;"></i>
                     <h6 style="font-size: 10px;margin-bottom: 0;">Thêm mới</h6>
-                </a>
+                </button>
             </div>
             <table class="table table-bordered table-hover" id="listPhieu">
                 <thead>
                     <tr>
+                        <th>STT</th>
                         <th>Nội dung phiếu phiếu</th>
                         <th>Thời gian xuất hàng</th>
                         <th>Tổng số lượng</th>
@@ -90,17 +92,19 @@
                 </thead>
                 <tbody>
                     <tr th:each="phieu : ${listPhieu}">
+                        <td th:text="${(phieuStat.index)+1}"></td>
                         <td th:text="${phieu.tenphieu}"></td>
                         <td th:text="${phieu.thoigian}"></td>
                         <td th:text="${phieu.soluong}"></td>
                         <td th:text="${#numbers.formatDecimal(phieu.tongtien, 0, 'COMMA', 0, 'POINT')}"></td>
-                        <th><a id="btnTableDetails" th:href="@{/manager-export/findExport/(id=${phieu.maphieu})}"
-                                class="btn btn-success justify-content-center m-auto" data-toggle="modal"><i
-                                    class="fa fa-info-circle"></i></a></th>
+                        <th><button id="btnTableDetails" th:onclick="'showmodalDetails('+${phieu.maphieu}+')'"
+                                class="btn btn-success justify-content-center m-auto" data-target="#details"
+                                data-toggle="modal"><i class="fa fa-info-circle"></i>
+                            </button></th>
                         <th>
-                            <a id="btnTableEdit" th:href="@{/manager-export/findExport/(id=${phieu.maphieu})}"
-                                class="btn btn-warning justify-content-center m-auto" data-toggle="modal"><i
-                                    class="fa fa-edit"></i></a>
+                            <button id="btnTableEdit" th:onclick="'showmodalEdit('+${phieu.maphieu}+')'"
+                                class="btn btn-warning justify-content-center m-auto" data-target="#edit"
+                                data-toggle="modal"><i class="fa fa-edit"></i></button>
                         </th>
                         <th>
                             <a id="btnTableDel" th:href="@{/manager-export/removeExport/(id=${phieu.maphieu})}"
@@ -122,35 +126,274 @@
                         <div class="modal-header">
                             <h2 class="modal-title">Thêm mới một phiếu xuất</h2>
                             <button type="button" class="close" data-toggle="modal"
-                                data-dismiss="modal">&times;</button>
+                                onclick=" closeModal()">&times;</button>
                         </div>
+                        <script>
+                            function calucator(i, x) {
+                                $('#divdetailsExport #thanhtien').val();
+                                var sl = $('#divdetailsExport #soluong' + i + '').val();
+                                var gia = $('#divdetailsExport #gia' + i + '').val();
+                                $('#divdetailsExport #thanhtien' + i + '').val(parseFloat(sl * gia));
+                                calcSum(x)
+                            }
+                            function calcSum(x) {
+                                // alert(x);
+                                $('#AddticketExport #soluong').val(0);
+                                $('#AddticketExport #tongtien').val(0);
+                                var sumSL = parseInt($('#AddticketExport #soluong').val());
+                                var sumGia = parseFloat($('#AddticketExport #tongtien').val());
+                                for (i = 0; i < x; i++) {
+                                    var sl = parseInt($('#divdetailsExport #soluong' + i + '').val());
+                                    var gia = parseFloat($('#divdetailsExport #thanhtien' + i + '').val());
+                                    sumSL += parseInt(sl);
+                                    sumGia += parseFloat(gia);
+                                }
+                                $('#AddticketExport #soluong').val(parseInt(sumSL));
+                                $('#AddticketExport #tongtien').val(parseFloat(sumGia));
+                            }
+                            // edit modal
+                            function calucatorx(i, x) {
+                                $('#detailsTicketEdit #thanhtien').val();
+                                var sl = $('#detailsTicketEdit #soluong' + i + '').val();
+                                var gia = $('#detailsTicketEdit #gia' + i + '').val();
+                                $('#detailsTicketEdit #thanhtien' + i + '').val(parseFloat(sl * gia));
+                                calcSumx(x)
+                            }
+                            function calcSumx(x) {
+                                // alert(x);
+                                $('#AdmissEdit #soluong').val(0);
+                                $('#AdmissEdit #tongtien').val(0);
+                                var sumSL = parseInt($('#AdmissEdit #soluong').val());
+                                var sumGia = parseFloat($('#AdmissEdit #tongtien').val());
+                                for (i = 0; i < x; i++) {
+                                    var sl = parseInt($('#detailsTicketEdit #soluong' + i + '').val());
+                                    var gia = parseFloat($('#detailsTicketEdit #thanhtien' + i + '').val());
+                                    sumSL += parseInt(sl);
+                                    sumGia += parseFloat(gia);
+                                }
+                                $('#AdmissEdit #soluong').val(parseInt(sumSL));
+                                $('#AdmissEdit #tongtien').val(parseFloat(sumGia));
+                            }
+                            /* Them so dong*/
+                            function createLine() {
+                                var x = $('#valueFor').val();
+                                if (x === '' || x === null) {
+                                    alert('Không được bỏ trống!');
+                                    $('#valueFor').focus();
+                                    event.preventDefault();
+                                    return false;
+                                } else if (x <= 0 || x > 100) {
+                                    alert('Số dòng từ 1-100.');
+                                    $('#valueFor').val('');
+                                    $('#valueFor').focus();
+                                    event.preventDefault();
+                                    return false;
+                                }
+                                if (confirm("Thông tin bạn nhập bên dưới sẽ bị mất\nBạn có muốn thêm không?") == true) {
 
+                                } else {
+                                    event.preventDefault();
+                                    return false;
+                                }
+                                setTimeout(1000);
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/createLine1",
+                                    data: "index=" + parseInt(x),
+                                    success: function (data) {
+                                        $('#divdetailsExport').replaceWith(data);
+                                        $('#divdetailsExport').val('');
+                                    },
+                                    error: function (data) {
+                                        alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
+                                    }
+                                });
+                            }
+                            // $('#confirmLine').on('click', function (event) {
+                            //     alert($('#valueFor').val());
+                            //     var x = $('#valueFor').val();
+                            //     if (x === '' || x === null) {
+                            //         alert('Không được bỏ trống!');
+                            //         $('#valueFor').focus();
+                            //         event.preventDefault();
+                            //         return false;
+                            //     } else if (x <= 0 || x > 100) {
+                            //         alert('Số dòng từ 1-100.');
+                            //         $('#valueFor').val('');
+                            //         $('#valueFor').focus();
+                            //         event.preventDefault();
+                            //         return false;
+                            //     }
+                            //     if (confirm("Thông tin bạn nhập bên dưới sẽ bị mất\nBạn có muốn thêm không?") == true) {
+
+                            //     } else {
+                            //         event.preventDefault();
+                            //         return false;
+                            //     }
+                            //     setTimeout(1000);
+                            //     $.ajax({
+                            //         type: "POST",
+                            //         url: "/createLine1",
+                            //         data: "index=" + parseInt(x),
+                            //         success: function (data) {
+                            //             $('#divdetailsExport').replaceWith(data);
+                            //             $('#divdetailsExport').val('');
+                            //         },
+                            //         error: function (data) {
+                            //             alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
+                            //         }
+                            //     });
+
+                            // });
+                        </script>
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <div class="row">
+                            <div class="row" id="AddticketExport">
+                                <h4 class="mt-2 mb-2 ml-3" style="color: red;"><span style="color: red;">(*)</span>: Là
+                                    những trường không cần nhập</h4>
                                 <div class="col-12">
                                     <h4>Nội dung phiếu xuất</h4>
-                                    <input id="tenphieu" name="tenphieu" value="" type="text" class="input-group">
+                                    <textarea id="tenphieu" name="tenphieu" value="" type="text" rows="5"
+                                        class="input-group" required></textarea>
                                 </div>
                                 <div class="col-12">
                                     <h4>Thời gian xuất hàng</h4>
-                                    <input id="thoigian" name="thoigian" value="" type="date" class="input-group">
+                                    <input id="thoigian" name="thoigian" required value="" type="date"
+                                        class="input-group">
+                                </div>
+                                <div class="col-6">
+                                    <h4>Tổng số lượng <span style="color: red;">(*)</span></h4>
+                                    <input readonly id="soluong" name="soluong" value="" type="number"
+                                        class="input-group">
+                                </div>
+                                <div class="col-6">
+                                    <h4>Tổng tiền <span style="color: red;">(*)</span></h4>
+                                    <input readonly id="tongtien" name="tongtien" value="" type="number"
+                                        class="input-group">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4 class="text-danger">Nhập số dòng cần thêm dữ liệu</h4>
+                                    <input id="valueFor" max="100" min="1" value="1" type="text" class="input-group ">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tổng số lượng</h4>
-                                    <input id="soluong" name="soluong" value="" type="number" class="input-group">
+                                    <input id="confirmLine" th:onclick="createLine()" value="Xác nhận" type="button"
+                                        class="input-group justify-content-center btn btn-success text-center">
                                 </div>
-                                <div class="col-12">
-                                    <h4>Tổng tiền</h4>
-                                    <input id="tongtien" name="tongtien" value="" type="number" class="input-group">
+                            </div>
+                            <hr class="bg-info" style="height: 4px;">
+                            <div id="divdetailsExport">
+                                <div class="row listct" th:object="${form}">
+                                    <th:block th:each="ctphieu, ctphieuStat : *{CTPhieuXuats}">
+                                        <div class="col-6 mb-2 mt-2" hidden>
+                                            <h4>Mã chi tiết</h4>
+                                            <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].machitiet}"
+                                                id="machitiet" value="" type="text" class="input-group">
+                                        </div>
+                                        <div class="col-4 mb-2 mt-2">
+                                            <h4>Số thứ tự</h4>
+                                            <input th:value="${(ctphieuStat.index)+1}" id="stt" value="" type="number"
+                                                readonly class="input-group">
+                                        </div>
+                                        <div class="col-8 mb-2 mt-2">
+                                            <h4>Tên cây</h4>
+                                            <select required th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].macay}"
+                                                th:onchange="inventoryBonsai([[${ctphieuStat.index}]])" name="macay"
+                                                th:id="'macay' + ${ctphieuStat.index}"
+                                                class="text-dark border-dark input-group ml-0">
+                                                <option th:each="bonsai : ${listBonsai}" th:value="${bonsai.macay}"
+                                                    th:text="${bonsai.tencay}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 mb-2 mt-2">
+                                            <h4>Giá</h4>
+                                            <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].gia}"
+                                                th:id="'gia' + ${ctphieuStat.index}" min="1000" value="0" type="number"
+                                                class="input-group"
+                                                th:onkeyup="calucator('[[${ctphieuStat.index}]]','[[${form.CTPhieuXuats.size()}]]')"
+                                                required>
+                                        </div>
+                                        <div class="col-6 mb-2 mt-2">
+                                            <h4>Số lượng</h4>
+                                            <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].soluong}"
+                                                value="1" min="1" max="200" th:id="'soluong' + ${ctphieuStat.index}"
+                                                type="number"
+                                                th:onkeyup="calucator('[[${ctphieuStat.index}]]','[[${form.CTPhieuXuats.size()}]]')"
+                                                class="input-group" required>
+                                            <select hidden th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].macay}"
+                                                th:id="'slton' + ${ctphieuStat.index}"
+                                                class="text-dark border-dark input-group ml-0">
+                                                <option th:each="bonsai : ${listBonsai}" th:value="${bonsai.macay}"
+                                                    th:text="${bonsai.tonkho}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <script>
+                                            $(document).ready(function () {
+                                                for (i = 0; i < 100; i++) {
+                                                    $('#divdetailsExport #macay' + i + ' option:selected').val();
+                                                    var macay = $('#divdetailsExport #macay' + i + ' option:selected').val();
+                                                    $('#divdetailsExport #slton' + i + '').val(macay);
+                                                    $('#divdetailsExport #soluong' + i + '').attr('max', $('#divdetailsExport #slton' + i + ' option:selected').text());
+                                                    //
+                                                    // $('#detailsTicketEdit #macay' + i + ' option:selected').val();
+                                                    // var macay1 = $('#detailsTicketEdit #macay' + i + ' option:selected').val();
+                                                    // $('#detailsTicketEdit #slton' + i + '').val(macay1);
+                                                    // $('#detailsTicketEdit  #soluong' + i + '').attr('max', $('#detailsTicketEdit #slton' + i + ' option:selected').text());
+                                                }
+                                            });
+                                            function inventoryBonsai(i) {
+                                                $('#divdetailsExport #macay' + i + ' option:selected').val();
+                                                var macay = $('#divdetailsExport #macay' + i + ' option:selected').val();
+                                                $('#divdetailsExport #slton' + i + '').val(macay);
+                                                $('#divdetailsExport #soluong' + i + '').attr('max', $('#divdetailsExport #slton' + i + ' option:selected').text());
+                                            }
+                                            function inventoryBonsai1(i) {
+                                                $('#detailsTicketEdit #macay' + i + ' option:selected').val();
+                                                var macay = $('#detailsTicketEdit #macay' + i + ' option:selected').val();
+                                                $('#detailsTicketEdit #slton' + i + '').val(macay);
+                                                $('#detailsTicketEdit  #soluong' + i + '').attr('max', $('#detailsTicketEdit #slton' + i + ' option:selected').text());
+                                            }
+                                            // $('#divdetailsExport select[id="macay"]').change(function () {
+                                            //     var macay = $(this).val();
+                                            //     $('#divdetailsExport #slton').val(macay);
+                                            //     $('#soluong0').attr('max', $('#divdetailsExport #slton option:selected').text());
+                                            // });
+                                            // $('#divdetailsExport select[id="macay"]').change(function () {
+                                            //     var macay = $(this).val();
+                                            //     // alert(maloai);
+                                            //     $.ajax({
+                                            //         type: "POST",
+                                            //         url: "/manager-export/inventory",
+                                            //         data: "macay=" + parseInt(macay),
+                                            //         success: function (data) {
+                                            //             return data;
+                                            //         },
+                                            //         error: function (data) {
+                                            //             alert('Lỗi!');
+                                            //         }
+                                            //     });
+                                            // });
+                                        </script>
+                                        <div class="col-12 mb-2 mt-2">
+                                            <h4>Thành tiền <span style="color: red;">(*)</span></h4>
+                                            <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].thanhtien}"
+                                                value="0" min="1" th:id="'thanhtien' + ${ctphieuStat.index}"
+                                                type="number" class="input-group" readonly>
+                                        </div>
+                                        <div class="col-12">
+                                            <hr class="bg-danger mt-2 mb-2" style="height: 2px;">
+                                        </div>
+                                    </th:block>
                                 </div>
                             </div>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button class="btn btn-info" type="submit">Xác nhận</button>
-                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                            <button class="btn btn-danger" onclick=" closeModal()">Hủy</button>
                         </div>
 
                     </div>
@@ -167,39 +410,110 @@
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <h2 class="modal-title">Chỉnh sửa thông tin phiếu</h2>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="close" onclick=" closeModal()">&times;</button>
                         </div>
 
                         <!-- Modal body -->
-                        <div class="modal-body">
-                            <div class="row">
+                        <div class="modal-body" id="listCTT" th:object="${form}">
+                            <div class="row mb-5" th:each="phieuXuat : ${phieuXuat}" id="AdmissEdit">
                                 <div class="col-12" hidden>
-                                    <h4>Mã phiếu</h4>
-                                    <input id="maphieu" name="maphieu" value="" type="text" class="input-group">
+                                    <h4>Mã nhập</h4>
+                                    <input th:value="${phieuXuat.maphieu}" id="maphieu" name="maphieu" value=""
+                                        type="number" readonly class="input-group">
+                                </div>
+                                <h4 class="mt-2 mb-2 ml-3" style="color: red;"><span style="color: red;">(*)</span>: Là
+                                    những trường không cần nhập</h4>
+                                <div class="col-12">
+                                    <h4>Nội dung phiếu nhập</h4>
+                                    <textarea th:text="${phieuXuat.tenphieu}" id="tenphieu" name="tenphieu" value=""
+                                        type="text" class="input-group" rows="5"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <h4>Nội dung phiếu xuất</h4>
-                                    <input id="tenphieu" name="tenphieu" value="" type="text" class="input-group">
+                                    <h4>Thời gian nhập hàng</h4>
+                                    <input th:value="${phieuXuat.thoigian}" id="thoigian" name="thoigian" value=""
+                                        type="date" class="input-group">
                                 </div>
-                                <div class="col-12">
-                                    <h4>Thời gian xuất hàng</h4>
-                                    <input id="thoigian" name="thoigian" value="" type="date" class="input-group">
+                                <div class="col-md-6">
+                                    <h4>Tổng số lượng <span style="color: red;">(*)</span></h4>
+                                    <input th:value="${phieuXuat.soluong}" id="soluong" name="soluong" value=""
+                                        type="number" readonly class="input-group">
                                 </div>
-                                <div class="col-12">
-                                    <h4>Tổng số lượng</h4>
-                                    <input id="soluong" name="soluong" value="" type="number" class="input-group">
+                                <div class="col-6">
+                                    <h4>Tổng tiền <span style="color: red;">(*)</span></h4>
+                                    <input th:value="${#numbers.formatDecimal(phieuXuat.tongtien,0,0,'COMMA')}"
+                                        id="tongtien" name="tongtien" value="" type="text" readonly class="input-group">
                                 </div>
-                                <div class="col-12">
-                                    <h4>Tổng tiền</h4>
-                                    <input id="tongtien" name="tongtien" value="" type="number" class="input-group">
-                                </div>
+                            </div>
+                            <!-- details bonsai in ticket -->
+                            <hr class="bg-info mt-2" style="height: 4px;">
+
+                            <div class="row listct" id="detailsTicketEdit">
+                                <th:block th:each="ctphieu, ctphieuStat : *{CTPhieuXuats}">
+                                    <div class="col-6 mb-2 mt-2" hidden>
+                                        <h4>Mã chi tiết</h4>
+                                        <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].machitiet}"
+                                            id="machitiet" value="" type="number" class="input-group">
+                                    </div>
+                                    <div class="col-6 mb-2 mt-2" hidden>
+                                        <h4>Mã phiếu xuất</h4>
+                                        <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].maphieu}" id="maphieu"
+                                            value="" type="number" class="input-group">
+                                    </div>
+                                    <div class="col-4 mb-2 mt-2">
+                                        <h4>Số thứ tự</h4>
+                                        <input th:value="${(ctphieuStat.index)+1}" id="stt" value="" type="number"
+                                            readonly class="input-group">
+                                    </div>
+                                    <div class="col-8 mb-2 mt-2">
+                                        <h4>Tên cây</h4>
+                                        <select th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].macay}"
+                                            class="input-group ml-0"
+                                            th:onchange="inventoryBonsai1([[${ctphieuStat.index}]])"
+                                            th:id="'macay' + ${ctphieuStat.index}">
+                                            <option th:each="i : ${listBonsai}" th:value="${i.macay}"
+                                                th:text="${i.tencay}" th:selected="${i.macay == ctphieu.macay}"
+                                                th:style="${i.macay == ctphieu.macay} ? 'font-style: bold;color: red;' : ''">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6 mb-2 mt-2">
+                                        <h4>Giá</h4>
+                                        <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].gia}"
+                                            th:onkeyup="calucatorx('[[${ctphieuStat.index}]]','[[${form.CTPhieuXuats.size()}]]')"
+                                            th:id="'gia' + ${ctphieuStat.index}" value="" min="1000" type="number"
+                                            class="input-group" required>
+                                    </div>
+
+                                    <div class="col-6 mb-2 mt-2">
+                                        <h4>Số lượng</h4>
+                                        <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].soluong}"
+                                            th:onkeyup="calucatorx('[[${ctphieuStat.index}]]','[[${form.CTPhieuXuats.size()}]]')"
+                                            value="" min="1" max="200" th:id="'soluong' + ${ctphieuStat.index}"
+                                            type="number" class="input-group" required>
+                                        <select hidden th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].macay}"
+                                            th:id="'slton' + ${ctphieuStat.index}"
+                                            class="text-dark border-dark input-group ml-0">
+                                            <option th:each="bonsai : ${listBonsai}" th:value="${bonsai.macay}"
+                                                th:text="${bonsai.tonkho}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 mb-2 mt-2">
+                                        <h4>Thành tiền <span style="color: red;">(*)</span></h4>
+                                        <input th:field="*{CTPhieuXuats[__${ctphieuStat.index}__].thanhtien}"
+                                            th:id="'thanhtien' + ${ctphieuStat.index}" value="" type="text"
+                                            class="input-group" readonly>
+                                    </div>
+                                    <div class="col-12">
+                                        <hr class="bg-danger mt-2 mb-2" style="height: 2px;">
+                                    </div>
                             </div>
                         </div>
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button class="btn btn-info" type="submit">Xác nhận</button>
-                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                            <button class="btn btn-danger" onclick=" closeModal()">Hủy</button>
                         </div>
 
                     </div>
@@ -252,23 +566,70 @@
                         </div>
 
                         <!-- Modal body -->
-                        <div class="modal-body">
-                            <div class="row">
+                        <div class="modal-body" id="listCT">
+                            <div class="row mb-5" th:each="phieu : ${phieu}">
                                 <div class="col-12">
                                     <h4>Nội dung phiếu xuất</h4>
-                                    <input id="tenphieu" name="tenphieu" value="" readonly type="text" class="input-group">
+                                    <textarea th:text="${phieu.tenphieu}" id="tenphieu" name="tenphieu" value=""
+                                        readonly rows="5" type="text" class="input-group"></textarea>
                                 </div>
                                 <div class="col-12">
                                     <h4>Thời gian xuất hàng</h4>
-                                    <input id="thoigian" name="thoigian" value="" readonly type="datetime" class="input-group">
+                                    <input th:value="${phieu.thoigian}" id="thoigian" name="thoigian" value="" readonly
+                                        type="datetime" class="input-group">
                                 </div>
-                                <div class="col-12">
+                                <div class="col-6">
                                     <h4>Tổng số lượng</h4>
-                                    <input id="soluong" name="soluong" value="" readonly type="number" class="input-group">
+                                    <input th:value="${phieu.soluong}" id="soluong" name="soluong" value="" readonly
+                                        type="number" class="input-group">
+                                </div>
+                                <div class="col-6">
+                                    <h4>Tổng tiền</h4>
+                                    <input th:value="${#numbers.formatDecimal(phieu.tongtien, 0, 'COMMA', 0, 'POINT')}"
+                                        id="tongtien" name="tongtien" value="" readonly type="text" class="input-group">
+                                </div>
+                            </div>
+                            <hr class="bg-info mt-2" style="height: 4px;">
+                            <div class="row listct" th:each="ctphieu ,i: ${listCT}">
+                                <!-- <div class="col-6">
+                                    <h4>STT</h4>
+                                    <input th:value="${listCT.size()}" value="" type="text" readonly
+                                        class="input-group">
+                                </div> -->
+                                <div class="col-6 mb-2" hidden>
+                                    <h4>Mã chi tiết</h4>
+                                    <input th:value="${ctphieu.machitiet}" value="" type="text" readonly
+                                        class="input-group">
+                                </div>
+                                <div class="col-4 mb-2 mt-2">
+                                    <h4>Số thứ tự</h4>
+                                    <input th:value="${(i.index)+1}" id="stt" value="" type="text" readonly
+                                        class="input-group">
+                                </div>
+                                <div class="col-8 mb-2 mt-2">
+                                    <h4>Tên cây cảnh</h4>
+                                    <input th:each="cay : ${listBonsai}" th:if="${cay.macay == ctphieu.macay}"
+                                        th:value="${cay.tencay}" value="" type="text" readonly class="input-group">
+                                </div>
+                                <div class="col-6 mb-2 mt-2">
+                                    <h4>Giá</h4>
+                                    <input th:value="${{ctphieu.gia}}" value="" type="number" readonly
+                                        class="input-group">
+                                </div>
+
+                                <div class="col-6 mb-2 mt-2">
+                                    <h4>Số lượng</h4>
+                                    <input th:value="${ctphieu.soluong}" value="" type="number" readonly
+                                        class="input-group">
+                                </div>
+                                <div class="col-12 mb-2 mt-2">
+                                    <h4>Thành tiền</h4>
+                                    <input
+                                        th:value="${#numbers.formatDecimal(ctphieu.thanhtien, 0, 'COMMA', 0, 'POINT')}"
+                                        value="" type="text" readonly class="input-group">
                                 </div>
                                 <div class="col-12">
-                                    <h4>Tổng tiền</h4>
-                                    <input id="tongtien" name="tongtien" value="" readonly type="number" class="input-group">
+                                    <hr class="bg-danger mt-2 mb-2" style="height: 2px;">
                                 </div>
                             </div>
                         </div>
@@ -276,8 +637,8 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <hr class="bg-info mb-2">
-                            <!-- <button class="btn btn-info" type="submit">Xác nhận</button>
-                            <button class="btn btn-danger" data-dismiss="modal">Hủy</button> -->
+                            <!-- <button class="btn btn-info" type="submit">Xác nhận</button> -->
+                            <button class="btn btn-danger" data-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>
@@ -287,32 +648,48 @@
         <!-- Nav tabs -->
 
         <script>
+            function closeModal() {
+                if (confirm('Toàn bộ thông tin bạn vừa thêm sẽ bị xóa!\nBạn có muốn đóng?') == true) {
+                    event.preventDefault();
+                    $('#add').modal('hide');
+                    $('#edit').modal('hide');
+                } else {
+
+                }
+            }
+            function showmodalDetails(id) {
+                setTimeout(1000);
+                $.ajax({
+                    type: "POST",
+                    url: "/manager-export/findDetailss",
+                    data: "id=" + id,
+                    success: function (data) {
+                        console.log(id);
+                        $('#details #listCT').replaceWith(data);
+                    },
+                    error: function (data) {
+                        alert('Có gì đó không đúng!\n Vui lòng thử lại sau.');
+                    }
+                });
+            }
+            function showmodalEdit(id) {
+                setTimeout(1000);
+                $.ajax({
+                    type: "POST",
+                    url: "/manager-export/findEdit",
+                    data: "id=" + id,
+                    success: function (data) {
+                        console.log(id);
+                        $('#listCTT').replaceWith(data);
+                    },
+                    error: function (data) {
+                        alert('Có gì đó không đúng!\n Vui lòng thử lại sau.');
+                    }
+                });
+            }
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip();
 
-                $('#btnAdd').on('click', function (event) {
-                    event.preventDefault();
-                    var href = $(this).attr('href');
-                    // var text = $(this).text(); //return New or Edit addAccount
-                    $('#add #tenphieu').val('');
-                    $('#add #thoigian').val('');
-                    $('#add #soluong').val('');
-                    $('#add #tongtien').val('');
-                    $('#add').modal();
-                });
-
-                $('.table #btnTableEdit').on('click', function (event) {
-                    event.preventDefault();
-                    var href = $(this).attr('href');
-                    $.get(href, function (phieuXuat, status) {
-                        $('#formEdit #maphieu').val(phieuXuat.maphieu);
-                        $('#formEdit #tenphieu').val(phieuXuat.tenphieu);
-                        $('#formEdit #thoigian').val(phieuXuat.thoigian);
-                        $('#formEdit #soluong').val(phieuXuat.soluong);
-                        $('#formEdit #tongtien').val(phieuXuat.tongtien);
-                    });
-                    $('#edit').modal(); // id modal
-                });
 
                 $('.table #btnTableDel').on('click', function (event) {
                     event.preventDefault();
@@ -321,24 +698,13 @@
                     $('#remove').modal(); // id modal
                 });
 
-                // details
-                $('.table #btnTableDetails').on('click', function (event) {
-                    event.preventDefault();
-                    var href = $(this).attr('href');
-                    $.get(href, function (phieuXuat, status) {
-                        $('#formDetails #maphieu').val(phieuXuat.maphieu);
-                        $('#formDetails #tenphieu').val(phieuXuat.tenphieu);
-                        $('#formDetails #thoigian').val(phieuXuat.thoigian);
-                        $('#formDetails #soluong').val(phieuXuat.soluong);
-                        $('#formDetails #tongtien').val(phieuXuat.tongtien);
-                    });
-                    $('#details').modal(); // id modal
-                });
+                // show 
+
                 // btn search
                 $('#btnSearch').on('click', function (event) {
                     var key = $('#keyword').val();
-                    if(key === null || key === ""){
-                        alert("Hãy nhập gì đó vào thanh tìm kiếm!");
+                    if (key === null || key === "") {
+                        alert("Hãy nhập gì đó vào thanh tìm kiếm.");
                     }
                 });
             });
@@ -354,7 +720,7 @@
                         $('#keyword').val(key);
                     },
                     error: function (data) {
-                        alert("lỗi!");
+                        alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
                     }
                 });
             }

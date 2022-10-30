@@ -19,7 +19,8 @@ public class CTPhieuNhapDaoImp implements CTPhieuNhapDao {
     public List<ChiTietPhieuNhap> showList(int maphieunhap) {
         String sql = "select machitietnhap, ct.maphieunhap, macay, manhacungcap, soluong, gianhap,thanhtien from chitietphieunhap ct join phieunhap p on ct.maphieunhap = p.maphieunhap where ct.maphieunhap = "
                 + maphieunhap + "";
-        return jdbcTemplate.query(sql, new CTPhieuNhapMapper());
+                List<ChiTietPhieuNhap> list = jdbcTemplate.query(sql, new CTPhieuNhapMapper());
+        return list;
     }
 
     @Override
@@ -31,11 +32,16 @@ public class CTPhieuNhapDaoImp implements CTPhieuNhapDao {
 
     @Override
     public int updateDetailsTicket(ChiTietPhieuNhap chiTietPhieuNhap) {
-        return 0;
+        String sql = "UPDATE `quanlykhocaycanh`.`chitietphieunhap` SET `maphieunhap` = ?,`macay` = ?,`manhacungcap` = ?,`soluong` = ?,`gianhap` = ?,`thanhtien` = ? WHERE `machitietnhap` = ?;";
+        return jdbcTemplate.update(sql, new Object[]{chiTietPhieuNhap.getMaphieu(),chiTietPhieuNhap.getMacay(),
+            chiTietPhieuNhap.getManhacungcap(),chiTietPhieuNhap.getSoluong(),chiTietPhieuNhap.getGia(),chiTietPhieuNhap.getThanhtien(),chiTietPhieuNhap.getMachitiet()});
     }
 
     @Override
     public int deleteDetailsTicket(int id) {
-        return 0;
+        String sql = "Delete from `quanlykhocaycanh`.`chitietphieunhap`  Where maphieunhap="+id+"";
+        return jdbcTemplate.update(sql);
     }
+
+
 }

@@ -1,23 +1,24 @@
 package com.treemanage.Entity;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.Blob;
+
 public class CayCanh extends LoaiCay{
     private int macay;
     private String tencay;
     private double giacay;
     private int tonkho;
-    private String hinhanh;
+    private Blob hinhanh;
     private String mota;
     private String dvt;
+    private MultipartFile photo;
 
 
     public CayCanh() {
     }
 
-    public CayCanh(int macay) {
-        this.macay = macay;
-    }
-
-    public CayCanh(int macay, String tencay, double giacay, int tonkho, String hinhanh, String mota, String dvt) {
+    public CayCanh(int macay, String tencay, double giacay, int tonkho, Blob hinhanh, String mota, String dvt) {
         this.macay = macay;
         this.tencay = tencay;
         this.giacay = giacay;
@@ -26,7 +27,8 @@ public class CayCanh extends LoaiCay{
         this.mota = mota;
         this.dvt = dvt;
     }
-    public CayCanh(int macay, String tencay, double giacay, int tonkho, String hinhanh, String mota, String dvt,int maloai) {
+    
+    public CayCanh(int macay, String tencay, double giacay, int tonkho, Blob hinhanh, String mota, String dvt,int maloai) {
         super(maloai);
         this.macay = macay;
         this.tencay = tencay;
@@ -36,7 +38,13 @@ public class CayCanh extends LoaiCay{
         this.mota = mota;
         this.dvt = dvt;
     }
+    public MultipartFile getPhoto() {
+        return photo;
+    }
 
+    public void setPhoto(MultipartFile photo) {
+        this.photo = photo;
+    }
     public int getMacay() {
         return this.macay;
     }
@@ -68,16 +76,16 @@ public class CayCanh extends LoaiCay{
     public void setTonkho(int tonkho) {
         this.tonkho = tonkho;
     }
+    
+    public Blob getHinhanh() {
+		return hinhanh;
+	}
 
-    public String getHinhanh() {
-        return this.hinhanh;
-    }
+	public void setHinhanh(Blob hinhanh) {
+		this.hinhanh = hinhanh;
+	}
 
-    public void setHinhanh(String hinhanh) {
-        this.hinhanh = hinhanh;
-    }
-
-    public String getMota() {
+	public String getMota() {
         return this.mota;
     }
 

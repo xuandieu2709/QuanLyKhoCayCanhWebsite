@@ -26,6 +26,17 @@ public class taikhoanDaolmp implements taikhoanDao {
 		return list;
 	}
 
+	@Override
+	public boolean CheckAccount(String taikhoan, String matkhau) {
+		String sql = "select * from taikhoan where taikhoan='" + taikhoan + "' and matkhau='" + matkhau + "'";
+		List<taikhoan> list = jdbctemplate.query(sql, new Mappertaikhoan());
+		if (list.size() < 1) {
+			return false;
+		}
+		return true;
+
+	}
+
 	// INSERT INTO `quanlykhocaycanh`.`taikhoan`(`taikhoan`,`matkhau`) VALUES(?,?)
 
 }

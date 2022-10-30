@@ -31,6 +31,13 @@ public class PhieuXuatDaoImp implements PhieuXuatDao {
         } else {
             return null;
         }
+    } //
+
+    @Override
+    public List<PhieuXuat> FindLastID() {
+        String sql = "SELECT * FROM quanlykhocaycanh.phieuxuat Order by maphieuxuat DESC Limit 1;";
+        List<PhieuXuat> list = jdbcTemplate.query(sql, new PhieuXuatMapper());
+        return list;
     }
 
     @Override
