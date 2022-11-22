@@ -36,7 +36,6 @@ public class ExportExcel {
         this.baoCaoDTO = baoCaoDTO;
         workbook = new XSSFWorkbook();
     }
-    
 
     public ExportExcel() {
     }
@@ -96,12 +95,12 @@ public class ExportExcel {
         font.setFontHeight(16);
         style.setFont(font);
 
-        createCell(row, 0, "Mã Chi Tiết", style);
-        createCell(row, 1, "Nội Dung Báo Cáo", style);
-        createCell(row, 2, "Tên cây", style);
-        createCell(row, 3, "Số lượng", style);
-        createCell(row, 4, "Giá bán", style);
-        createCell(row, 5, "Thành tiền", style);
+        // createCell(row, 0, "Mã Chi Tiết", style);
+        createCell(row, 0, "Nội Dung Báo Cáo", style);
+        createCell(row, 1, "Tên cây", style);
+        createCell(row, 2, "Số lượng", style);
+        createCell(row, 3, "Giá bán", style);
+        createCell(row, 4, "Thành tiền", style);
 
     }
 
@@ -116,22 +115,33 @@ public class ExportExcel {
         font.setFontName("Times New Roman");
         font.setFontHeight(14);
         style.setFont(font);
-
+        int count = 0;
+        int countSum = 0;
+        double countTT = 0;
         for (CTBaoCao ct : baoCaoDTO.getCtbaocaos()) {
             for (CayCanh cay : baoCaoDTO.getCaycanhs()) {
                 if (ct.getMacay() == cay.getMacay()) {
                     Row row = sheet.createRow(rowCount++);
                     int columnCount = 0;
-                    createCell(row, columnCount++, ct.getMachitiet(), style); // mactbaocao
+                    // createCell(row, columnCount++, ct.getMachitiet(), style); // mactbaocao
                     createCell(row, columnCount++, baoCaoDTO.getBaocao().getNoidung(), style); // Mabaocao
                     createCell(row, columnCount++, cay.getTencay(), style);
                     createCell(row, columnCount++, ct.getSoluong(), style);
                     createCell(row, columnCount++, String.valueOf(currencyFormatter.format((long) ct.getGia())), style);
-                    createCell(row, columnCount++, String.valueOf(currencyFormatter.format((long) ct.getThanhtien())), style);
+                    createCell(row, columnCount++, String.valueOf(currencyFormatter.format((long) ct.getThanhtien())),
+                            style);
+                    count++;
+                    countSum += ct.getSoluong();
+                    countTT += ct.getThanhtien();
                 }
             }
 
         }
+        Row row = sheet.createRow(rowCount++);
+        row = sheet.createRow(rowCount++);
+        createCell(row, 0, "Tổng cộng", style);
+        createCell(row, 2, countSum, style);
+        createCell(row, 4, String.valueOf(currencyFormatter.format((long) countTT)), style);
     }
 
     public void exportReport(HttpServletResponse response) throws IOException {
@@ -187,15 +197,16 @@ public class ExportExcel {
         style.setFont(font);
 
         // for (CTBaoCao ct : ctBaoCaos) {
-        //     for(CayCanh cay: caycanhs)
-        //     Row row = sheet.createRow(rowCount++);
-        //     int columnCount = 0;
-        //     createCell(row, columnCount++, ct.getMachitiet(), style); // mactbaocao
-        //     createCell(row, columnCount++, ct.getMaphieu(), style); // Mabaocao
-        //     createCell(row, columnCount++, ct.getMacay(), style);
-        //     createCell(row, columnCount++, ct.getSoluong(), style);
-        //     createCell(row, columnCount++, String.valueOf((long) ct.getGia()), style);
-        //     createCell(row, columnCount++, String.valueOf((long) ct.getThanhtien()), style);
+        // for(CayCanh cay: caycanhs)
+        // Row row = sheet.createRow(rowCount++);
+        // int columnCount = 0;
+        // createCell(row, columnCount++, ct.getMachitiet(), style); // mactbaocao
+        // createCell(row, columnCount++, ct.getMaphieu(), style); // Mabaocao
+        // createCell(row, columnCount++, ct.getMacay(), style);
+        // createCell(row, columnCount++, ct.getSoluong(), style);
+        // createCell(row, columnCount++, String.valueOf((long) ct.getGia()), style);
+        // createCell(row, columnCount++, String.valueOf((long) ct.getThanhtien()),
+        // style);
         // }
     }
 
@@ -210,11 +221,11 @@ public class ExportExcel {
         style.setFont(font);
 
         // for (CayCanh cay : listcaycanh) {
-        //     Row row = sheet.createRow(rowCount++);
-        //     int columnCount = 0;
-        //     createCell(row, columnCount++, cay.getTencay(), style);
-        //     createCell(row, columnCount++, cay.getGiacay(), style);
-        //     createCell(row, columnCount++, String.valueOf(cay.getTonkho()), style);
+        // Row row = sheet.createRow(rowCount++);
+        // int columnCount = 0;
+        // createCell(row, columnCount++, cay.getTencay(), style);
+        // createCell(row, columnCount++, cay.getGiacay(), style);
+        // createCell(row, columnCount++, String.valueOf(cay.getTonkho()), style);
         // }
     }
 

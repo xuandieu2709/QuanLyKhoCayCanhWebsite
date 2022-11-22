@@ -42,9 +42,9 @@ public class ExportPDF extends Common {
         FontFactory.registerDirectories();
 
         font = FontFactory.getFont("Times New Roman");
-        cell.setPhrase(new Phrase("Mã chi tiết", font));
+        // cell.setPhrase(new Phrase("Mã chi tiết", font));
 
-        table.addCell(cell);
+        // table.addCell(cell);
 
         cell.setPhrase(new Phrase("Nội dung báo cáo", font));
         table.addCell(cell);
@@ -70,14 +70,16 @@ public class ExportPDF extends Common {
         cell.setBackgroundColor(Color.WHITE);
         Font font = FontFactory.getFont(FontFactory.HELVETICA);
         // font.setFamily("Times New Roman");
+        int countSL = 0;
+        double countTT = 0;
         font.setColor(Color.WHITE);
         FontFactory.registerDirectories();
         font = FontFactory.getFont("Times New Roman");
         for (CTBaoCao ct : baoCaoDTO.getCtbaocaos()) {
             for (CayCanh cay : baoCaoDTO.getCaycanhs()) {
                 if (cay.getMacay() == ct.getMacay()) {
-                    cell.setPhrase(new Phrase(String.valueOf(ct.getMachitiet()), font));
-                    table.addCell(cell);
+                    // cell.setPhrase(new Phrase(String.valueOf(ct.getMachitiet()), font));
+                    // table.addCell(cell);
                     cell.setPhrase(new Phrase(String.valueOf(baoCaoDTO.getBaocao().getNoidung()), font));
                     table.addCell(cell);
                     cell.setPhrase(new Phrase(String.valueOf(cay.getTencay()), font));
@@ -86,11 +88,25 @@ public class ExportPDF extends Common {
                     table.addCell(cell);
                     cell.setPhrase(new Phrase(String.valueOf(currencyFormatter.format((long) ct.getGia())), font));
                     table.addCell(cell);
-                    cell.setPhrase(new Phrase(String.valueOf(currencyFormatter.format((long) ct.getThanhtien())), font));
+                    cell.setPhrase(
+                            new Phrase(String.valueOf(currencyFormatter.format((long) ct.getThanhtien())), font));
                     table.addCell(cell);
+                    countSL += ct.getSoluong();
+                    countTT += ct.getThanhtien();
                 }
             }
         }
+        cell.setPhrase(new Phrase("Tổng cộng", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase(String.valueOf(countSL), font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase(String.valueOf(currencyFormatter.format(countTT)), font));
+        table.addCell(cell);
+
     }
 
     public void exportReport(HttpServletResponse response) throws DocumentException, IOException {
@@ -107,9 +123,9 @@ public class ExportPDF extends Common {
         Paragraph p = new Paragraph("Báo Cáo Thống kê", font);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        PdfPTable table = new PdfPTable(6);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] { 1.0f, 5f, 5f, 2.0f, 3.0f, 3.0f });
+        table.setWidths(new float[] {5f, 5f, 2.0f, 3.0f, 3.0f });
         table.setSpacingBefore(10);
         writeTableHeaderReport(table);
         writeTableDataReport(table);

@@ -37,7 +37,7 @@ public class BaoCaoDaoImp implements BaoCaoDao {
 
     @Override
     public List<BaoCao> findRPByID(int idRP) {
-        String sql = "Select * from baocao where mabaocao = " + idRP + ";";
+        String sql = "Select * from quanlykhocaycanh.baocao where mabaocao = " + idRP + ";";
         List<BaoCao> list = jdbcTemplate.query(sql, new BaoCaoMapper());
         return list;
     }
@@ -51,12 +51,7 @@ public class BaoCaoDaoImp implements BaoCaoDao {
 
     @Override
     public List<BaoCao> searchRP(String key) {
-        String sql = "SELECT * FROM baocao where concat_ws('',noidung,mabaocao,ngaybaocao) like '%" + key + "%'";
-        List<BaoCao> list = jdbcTemplate.query(sql, new BaoCaoMapper());
-        if (list.size() > 0) {
-            return list;
-        } else {
-            return null;
-        }
+        String sql = "SELECT * FROM baocao where concat_ws('',noidung,mabaocao,ngaybaocao) like '%"+key+"%'";
+        return jdbcTemplate.query(sql, new BaoCaoMapper());
     }
 }

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +36,7 @@ import com.treemanage.Entity.LoaiCay;
 import com.treemanage.Entity.NhaCungCap;
 import com.treemanage.Entity.PhieuNhap;
 import com.treemanage.Entity.PhieuXuat;
+import com.treemanage.Entity.taikhoan;
 import com.treemanage.Service.CayCanhService;
 
 @Controller
@@ -44,20 +44,50 @@ public class ManagementController extends Common {
     @Autowired
     CayCanhService cayCanhService;
 
+    //
+    public Boolean checkNullTKSession(HttpSession session) {
+        if (!session.getAttribute("Account").equals(null)) {
+            return false;
+        }
+        return true;
+
+    }
+
     @GetMapping("manager-bonsai")
-    public String ManagementBonsai(Model model, HttpSession session) {
+    public ModelAndView ManagementBonsai(Model model, HttpSession session) {
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
         List<CayCanh> list = cayCanhService.showList();
         List<NhaCungCap> list2 = NhaCungCapService.showList();
-        List<LoaiCay> list3=loaiCanhService.showlist();
+        List<LoaiCay> list3 = loaiCanhService.showlist();
         model.addAttribute("listNCC", list2);
         model.addAttribute("listCay", list);
         model.addAttribute("listLoaiCay", list3);
         model.addAttribute("number", 0);
-        return "index";
+        mv.addObject("messSreach", "");
+        mv.setViewName("index");
+        return mv;
     }
 
     @GetMapping("manager-import")
-    public ModelAndView importTicket() {
+    public ModelAndView importTicket(HttpSession session) {
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
+        //
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
+        taikhoan tk = taiKhoanService.findOne((String) session.getAttribute("Account"));
+        if (tk.getVaitro().equals("3")) {
+            mv.setViewName("403");
+            return mv;
+        }
+        //
         List<PhieuNhap> list = phieuNhapService.showList();
         mv.addObject("listPhieu", list);
         mv.setViewName("import");
@@ -67,11 +97,12 @@ public class ManagementController extends Common {
         }
         ctnhap.addPhieu(new PhieuNhap());
         mv.addObject("form", ctnhap);
+        mv.addObject("messSreach", "");
         return mv;
     }
 
     @PostMapping("/createLine")
-    public ModelAndView Crearline(@ModelAttribute CTPhieuNhapDto form,@RequestParam("index") int index) {
+    public ModelAndView Crearline(@ModelAttribute CTPhieuNhapDto form, @RequestParam("index") int index) {
         int x = form.getChiTietPhieuNhaps().size();
         // System.out.println(x);
         List<ChiTietPhieuNhap> list = form.getChiTietPhieuNhaps();
@@ -79,7 +110,7 @@ public class ManagementController extends Common {
             list.add(new ChiTietPhieuNhap());
         }
         form.setChiTietPhieuNhaps(list);
-        //ctnhap.addPhieu(new PhieuNhap());
+        // ctnhap.addPhieu(new PhieuNhap());
         mv.addObject("form", form);
         mv.setViewName("import :: #divdetailsImport");
         return mv;
@@ -96,23 +127,28 @@ public class ManagementController extends Common {
     }
 
     @GetMapping("manager-export")
-    public ModelAndView exportTicket() {
+    public ModelAndView exportTicket(HttpSession session) {
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
         List<PhieuXuat> list = phieuXuatService.showList();
         mv.addObject("listPhieu", list);
         CTPhieuXuatpDto ctxuat = new CTPhieuXuatpDto();
         for (int j = 0; j < 1; j++) {
             ctxuat.addDetailsPhieu(new ChiTietPhieuXuat());
         }
-        //ctxuat.addPhieu(new PhieuXuat());
+        // ctxuat.addPhieu(new PhieuXuat());
         mv.addObject("form", ctxuat);
         List<CayCanh> list1 = cayCanhService.showList();
         mv.addObject("listBonsai", list1);
+        mv.addObject("messSreach", "");
         mv.setViewName("export");
         return mv;
     }
 
     @PostMapping("/createLine1")
-    public ModelAndView Crearline1(@ModelAttribute CTPhieuXuatpDto form,@RequestParam("index") int index) {
+    public ModelAndView Crearline1(@ModelAttribute CTPhieuXuatpDto form, @RequestParam("index") int index) {
         int x = form.getCTPhieuXuats().size();
         // System.out.println(x);
         List<ChiTietPhieuXuat> list = form.getCTPhieuXuats();
@@ -126,10 +162,25 @@ public class ManagementController extends Common {
     }
 
     @GetMapping("manager-report")
-    public ModelAndView report() {
+    public ModelAndView report(HttpSession session) {
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
+        // taikhoan tk = taiKhoanService.findOne((String)
+        // session.getAttribute("Account"));
+        String role = (String) session.getAttribute("Role");
+        System.out.println(role);
+        if (!role.endsWith("0") && !role.endsWith("1")) {
+            mv.setViewName("403");
+            return mv;
+        } else {
+
+        }
         List<BaoCao> list = baoCaoService.showList();
         mv.addObject("list", list);
         mv.setViewName("report");
+        mv.addObject("messSreach", "");
         return mv;
     }
 
@@ -147,16 +198,20 @@ public class ManagementController extends Common {
     public String createExport(PhieuXuat phieuXuat, @ModelAttribute CTPhieuXuatpDto form) {
         // adminService.addAdmin(admin);
         phieuXuatService.addExport(phieuXuat);
-        
+
         PhieuXuat p = phieuXuatService.FindLastID();
         for (ChiTietPhieuXuat ct : form.getCTPhieuXuats()) {
             ct.setMaphieu(p.getMaphieu());
             ctPhieuXuatService.insertDetailsTicket(ct);
+            CayCanh cay = cayCanhService.findOne(ct.getMacay());
+            cay.setTonkho(cay.getTonkho() - ct.getSoluong()); // update inventory
+            cayCanhService.updateInventoryByID(cay, cay.getMacay());
+
         }
         return "redirect:/manager-export";
     }
 
-    /* show data edit to modal*/
+    /* show data edit to modal */
     @PostMapping("/manager-export/findDetailss")
     public ModelAndView findDetailss(@RequestParam("id") int id) {
         // System.out.println(id);
@@ -195,9 +250,14 @@ public class ManagementController extends Common {
 
     /* edit a person */
     @PostMapping("/manager-export/editExport")
-    public ModelAndView updateExport(PhieuXuat phieuXuat,@ModelAttribute CTPhieuXuatpDto form) {
+    public ModelAndView updateExport(PhieuXuat phieuXuat, @ModelAttribute CTPhieuXuatpDto form) {
         phieuXuatService.editExport(phieuXuat);
-        for(ChiTietPhieuXuat ct: form.getCTPhieuXuats()){
+        for (ChiTietPhieuXuat ct : form.getCTPhieuXuats()) {
+            //
+            ChiTietPhieuXuat ctold = ctPhieuXuatService.FindByIDExport(phieuXuat.getMaphieu()).get(0);// chua sl cu
+            CayCanh cay = cayCanhService.findOne(ctold.getMacay()); // cay.getTonkho : ton cu
+            cay.setTonkho((cay.getTonkho() - ctold.getSoluong()) + ct.getSoluong());
+            cayCanhService.updateInventoryByID(cay, cay.getMacay());
             ctPhieuXuatService.updateDetailsTicket(ct);
             System.out.println(ct.toString());
         }
@@ -223,19 +283,33 @@ public class ManagementController extends Common {
 
     // @PostMapping("/manager-export/inventory")
     // public ModelAndView inventoryBonsai(@RequestParam("macay") int macay){
-    //     CayCanh cay = cayCanhService.findOne(macay);
-    //     // System.out.println(cay);
-    //     mv.addObject("inventoryBonsai", cay.getTonkho());
-    //     mv.setViewName("export :: #inventoryBonsai");
-    //     return mv;
+    // CayCanh cay = cayCanhService.findOne(macay);
+    // // System.out.println(cay);
+    // mv.addObject("inventoryBonsai", cay.getTonkho());
+    // mv.setViewName("export :: #inventoryBonsai");
+    // return mv;
     // }
 
     @PostMapping("/manager-export/search")
     public ModelAndView searchExport(String keyword) {
-        List<PhieuXuat> list = phieuXuatService.searchExport(keyword);
-        mv.addObject("listPhieu", list);
-        mv.setViewName("export :: #listPhieu");
-        return mv;
+        if (keyword == "" || keyword == null) {
+            List<PhieuXuat> list = phieuXuatService.showList();
+            mv.addObject("listPhieu", list);
+            mv.addObject("messSreach", "");
+            mv.setViewName("export :: #listPhieu");
+            return mv;
+        } else {
+            List<PhieuXuat> list = phieuXuatService.searchExport(keyword);
+            mv.addObject("listPhieu", list);
+            mv.setViewName("export :: #listPhieu");
+            if (list.size() == 0) {
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }else{
+            mv.addObject("messSreach", "");
+            }
+            return mv;
+        }
+
     }
 
     // manager Import
@@ -250,24 +324,24 @@ public class ManagementController extends Common {
             ctPhieuNhapService.insertDetailsTicket(ct);
             //
             CayCanh cay = cayCanhService.findOne(ct.getMacay());
-            cay.setTonkho(cay.getTonkho()+ct.getSoluong());
-            cayCanhService.updateInventoryByID(cay,ct.getMacay());
+            cay.setTonkho(cay.getTonkho() + ct.getSoluong());
+            cayCanhService.updateInventoryByID(cay, ct.getMacay());
         }
         return "redirect:/manager-import";
     }
 
     /* edit a person */
     @PostMapping("/manager-import/editImport")
-    public ModelAndView updateImport(PhieuNhap PhieuNhap,@ModelAttribute CTPhieuNhapDto form) {
+    public ModelAndView updateImport(PhieuNhap PhieuNhap, @ModelAttribute CTPhieuNhapDto form) {
         phieuNhapService.editImport(PhieuNhap);
-        for(ChiTietPhieuNhap ct: form.getChiTietPhieuNhaps()){
-        ChiTietPhieuNhap ctold = ctPhieuNhapService.showList(PhieuNhap.getMaphieu()).get(0);// chua sl cu
-        CayCanh cay = cayCanhService.findOne(ctold.getMacay()); // cay.getTonkho : ton cu
-        cay.setTonkho((cay.getTonkho()-ctold.getSoluong())+ct.getSoluong());
-        cayCanhService.updateInventoryByID(cay, cay.getMacay());
-        ctPhieuNhapService.updateDetailsTicket(ct);
-        System.out.println(ct.toString());
-    }
+        for (ChiTietPhieuNhap ct : form.getChiTietPhieuNhaps()) {
+            ChiTietPhieuNhap ctold = ctPhieuNhapService.showList(PhieuNhap.getMaphieu()).get(0);// chua sl cu
+            CayCanh cay = cayCanhService.findOne(ctold.getMacay()); // cay.getTonkho : ton cu
+            cay.setTonkho((cay.getTonkho() - ctold.getSoluong()) + ct.getSoluong());
+            cayCanhService.updateInventoryByID(cay, cay.getMacay());
+            ctPhieuNhapService.updateDetailsTicket(ct);
+            System.out.println(ct.toString());
+        }
         mv.setViewName("redirect:/manager-import");
         return mv;
     }
@@ -290,10 +364,24 @@ public class ManagementController extends Common {
 
     @PostMapping("/manager-import/search")
     public ModelAndView searchImport(String keyword) {
-        List<PhieuNhap> list = phieuNhapService.searchImport(keyword);
-        mv.addObject("listPhieu", list);
-        mv.setViewName("import :: #listPhieu");
-        return mv;
+        if (keyword == null || keyword == "") {
+            List<PhieuNhap> list = phieuNhapService.showList();
+            mv.addObject("listPhieu", list);
+            mv.addObject("messSreach", "");
+            System.out.println(list);
+            mv.setViewName("import :: #listPhieu");
+            return mv;
+        } else {
+            List<PhieuNhap> list = phieuNhapService.searchImport(keyword);
+            mv.addObject("listPhieu", list);
+            mv.setViewName("import :: #listPhieu");
+            if (list.size() == 0) {
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }else{
+            mv.addObject("messSreach", "");
+            }
+            return mv;
+        }
     }
 
     @PostMapping("/manager-import/findDetailss")
@@ -361,9 +449,11 @@ public class ManagementController extends Common {
         List<CTBaoCao> list = ctBaoCaoService.showListByIDReport(id);
         // PhieuNhap PhieuNhap = phieuNhapService.findbyId(id).get(0);
         BaoCao baocao = baoCaoService.findRPByID(id);
+
         mv.addObject("baocao", baocao);
         mv.addObject("listCT", list);
         mv.setViewName("report :: #listCT");
+        mv.addObject("listCay", cayCanhService.showList());
         return mv;
     }
 
@@ -379,10 +469,24 @@ public class ManagementController extends Common {
 
     @PostMapping("/manager-report/searchReport")
     public ModelAndView searchRP(@RequestParam("keyword") String key) {
-        List<BaoCao> list = baoCaoService.searchRP(key);
-        mv.addObject("list", list);
-        mv.setViewName("report :: #listRP");
-        return mv;
+        if (key == null || key == "") {
+            List<BaoCao> list = baoCaoService.showList();
+            mv.addObject("list", list);
+            mv.addObject("messSreach", "");
+            mv.setViewName("report :: #listRP");
+            return mv;
+        } else {
+            List<BaoCao> list = baoCaoService.searchRP(key);
+            mv.addObject("list", list);
+            if (list.size() == 0) {
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }else{
+            mv.addObject("messSreach", "");
+            }
+            mv.setViewName("report :: #listRP");
+            return mv;
+        }
+
     }
 
     /**/
@@ -445,7 +549,7 @@ public class ManagementController extends Common {
     @PostMapping("/manager-bonsai/search_cay")
     public ModelAndView search_cay(@RequestParam("keyword") String search) {
         ModelAndView mv = new ModelAndView();
-        if (search == null) {
+        if (search == null || search == "") {
             List<CayCanh> list = cayCanhService.showList();
             mv.addObject("listCay", list);
             mv.addObject("keyword", search);
@@ -456,6 +560,10 @@ public class ManagementController extends Common {
             List<CayCanh> list = cayCanhService.findlistbyname(search);
             mv.addObject("listCay", list);
             mv.addObject("keyword", search);
+            if (list.size() == 0) {
+                System.out.println(list.size());
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }
             mv.setViewName("index :: #reloadcay");
             return mv;
         }
@@ -513,7 +621,7 @@ public class ManagementController extends Common {
     @PostMapping("/manager-bonsai/search_nhacungcap")
     public ModelAndView search_nhacungcap(@RequestParam("keywords") String searchs) {
         ModelAndView mv = new ModelAndView();
-        if (searchs == null) {
+        if (searchs == null || searchs == "") {
             List<NhaCungCap> list = NhaCungCapService.showList();
             mv.addObject("listNCC", list);
             mv.addObject("keywords", searchs);
@@ -524,6 +632,10 @@ public class ManagementController extends Common {
             List<NhaCungCap> list = NhaCungCapService.findlistbyname(searchs);
             mv.addObject("listNCC", list);
             mv.addObject("keywords", searchs);
+            if (list.size() == 0) {
+                System.out.println(list.size());
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }
             mv.setViewName("index :: #nhacungcap");
             return mv;
         }
@@ -536,4 +648,164 @@ public class ManagementController extends Common {
         mv.setViewName("index :: #nhacungcap");
         return mv;
     }
+
+    /* manager-staff */
+    @GetMapping("manager-user")
+    public ModelAndView ManagementNguoiDung(Model model, HttpSession session) {
+        if (checkNullTKSession(session) == true) {
+            mv.setViewName("login");
+            return mv;
+        }
+        // taikhoan tk = taiKhoanService.findOne((String)
+        // session.getAttribute("Account"));
+        String role = (String) session.getAttribute("Role");
+        System.out.println(role);
+        if (!role.endsWith("0")) {
+            mv.setViewName("403");
+            return mv;
+        } else {
+
+        }
+        List<taikhoan> list4 = taiKhoanService.showList();
+
+        model.addAttribute("listTK", list4);
+        model.addAttribute("number", 0);
+        mv.addObject("messSreach", "");
+        mv.setViewName("staff");
+        return mv;
+    }
+
+    @GetMapping("/load-image-user/{taikhoan}")
+    public void load_image(@PathVariable("taikhoan") String taikhoan, HttpServletResponse response)
+            throws IOException, SQLException {
+        response.setContentType("image/jpeg");
+        Blob ph = (Blob) taiKhoanService.findOne(taikhoan).getHinhanh();
+        byte[] bytes = ph.getBytes(1, (int) ph.length());
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        IOUtils.copy(inputStream, response.getOutputStream());
+    }
+
+    @PostMapping("/checkTaiKhoan")
+    public ModelAndView checkTK(@PathVariable("taikhoan") String taikhoan) {
+        System.out.println(taiKhoanService.CheckTaiKhoanAC(taikhoan));
+        if (taiKhoanService.CheckTaiKhoanAC(taikhoan) == true) {
+            mv.addObject("messAccount", "Tên đăng nhập đã tồn tại");
+            mv.addObject("taikhoan", taikhoan);
+            mv.setViewName("staff :: #add");
+            return mv;
+        }else{
+            mv.addObject("taikhoan", taikhoan);
+            mv.setViewName("staff");
+            mv.addObject("messAccount", "");
+            return mv;
+        }
+    }
+
+    @PostMapping("/load-modal-infor-user")
+    public ModelAndView load_modal_infor_user(HttpSession session) {
+        String tk = (String) session.getAttribute("Account");
+        System.out.println(tk);
+        taikhoan tk1 = taiKhoanService.findOne(tk);
+        System.out.println(tk1);
+        mv.addObject("users", tk1);
+        mv.setViewName("staff :: #infor");
+        return mv;
+    }
+
+    @PostMapping("/manager-addUser")
+    public ModelAndView createNguoiDung(taikhoan taikhoan) throws IOException {
+        ModelAndView mv = new ModelAndView();
+        taiKhoanService.add(taikhoan);
+        mv.setViewName("redirect:/manager-user");
+        return mv;
+
+    }
+
+    @PostMapping("/load-modal-sua-user")
+    public ModelAndView load_modal_sua_user(@RequestParam("taikhoan") String taikhoan) {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("users", taiKhoanService.findOne(taikhoan));
+        System.out.println(taiKhoanService.findOne(taikhoan));
+        mv.setViewName("staff :: #sua_user");
+        return mv;
+    }
+
+    @PostMapping("/sua_user")
+    public ModelAndView load_modal_sua_user(taikhoan taikhoan) throws IOException {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("redirect:/manager-user");
+        taiKhoanService.update(taikhoan);
+        return mv;
+    }
+
+    @PostMapping("/xoa_user")
+    public ModelAndView xoa_user(@RequestParam("taikhoan") String taikhoan) {
+        ModelAndView mv = new ModelAndView();
+        taiKhoanService.delete(taikhoan);
+        mv.addObject("listTK", taiKhoanService.showList());
+        mv.setViewName("staff :: #reloaduser");
+        return mv;
+    }
+
+    @PostMapping("/manager-user/search_user")
+    public ModelAndView search_user(@RequestParam("keyword") String search) {
+        ModelAndView mv = new ModelAndView();
+        if (search == null || search == "") {
+            List<taikhoan> list = taiKhoanService.showList();
+            mv.addObject("listTK", list);
+            mv.addObject("keyword", search);
+            mv.addObject("messSreach", "");
+            mv.setViewName("staff :: #reloaduser");
+            return mv;
+
+        } else {
+            List<taikhoan> list = taiKhoanService.findlistbyaccount(search);
+            mv.addObject("listTK", list);
+            mv.addObject("keyword", search);
+            if (list.size() == 0) {
+                System.out.println(list.size());
+                mv.addObject("messSreach", "Không tìm thấy kết quả nào cho từ khóa của bạn");
+            }
+            mv.setViewName("staff :: #reloaduser");
+            return mv;
+        }
+    }
+    /* End */
+
+    /* Loai cay */
+    @PostMapping("/manager-addLoaicay")
+    public ModelAndView createLoaiCay(LoaiCay loaicay) {
+        ModelAndView mv = new ModelAndView();
+        loaiCanhService.add(loaicay);
+        mv.setViewName("redirect:/manager-bonsai");
+        return mv;
+
+    }
+
+    @PostMapping("/load-modal-sualoaicay")
+    public ModelAndView load_modal_sualoaicay(@RequestParam("maloai") int maloai) {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("loaicays", loaiCanhService.findOne(maloai));
+        System.out.println(loaiCanhService.findOne(maloai));
+        mv.setViewName("index :: #sua_loaicay");
+        return mv;
+    }
+
+    @PostMapping("/sua-loaicay")
+    public ModelAndView load_modal_sualoaicay(LoaiCay loaicay) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("redirect:/manager-bonsai");
+        loaiCanhService.update(loaicay);
+        return mv;
+    }
+
+    @PostMapping("/xoa_loaicay")
+    public ModelAndView xoa_loaicay(int maloai) {
+        ModelAndView mv = new ModelAndView();
+        loaiCanhService.delete(maloai);
+        mv.addObject("listLoaiCay", loaiCanhService.showlist());
+        mv.setViewName("index :: #reloadloaicay");
+        return mv;
+    }
+    /* end */
 }

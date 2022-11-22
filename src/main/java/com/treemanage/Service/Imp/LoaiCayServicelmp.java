@@ -17,5 +17,17 @@ public class LoaiCayServicelmp implements LoaiCayService {
 	public List<LoaiCay> showlist(){
 		return loaiCayDao.showlist();
 	}
-
+	public int add(LoaiCay loaicay) {
+		return loaiCayDao.add(loaicay);
+	}
+	
+    public int delete(int maloai) {
+    	return loaiCayDao.delete(maloai);
+    }
+    public LoaiCay findOne(int maloai) {
+    	return loaiCayDao.findOne(maloai);
+    }
+	public int update(LoaiCay loaicay) {
+		return loaiCayDao.update(loaicay);
+	}
 }

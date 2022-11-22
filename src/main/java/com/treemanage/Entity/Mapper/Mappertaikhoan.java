@@ -1,5 +1,7 @@
 package com.treemanage.Entity.Mapper;
 import org.springframework.jdbc.core.RowMapper;
+
+import com.mysql.cj.jdbc.Blob;
 import com.treemanage.Entity.taikhoan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ public class Mappertaikhoan implements RowMapper<taikhoan> {
 		tk.setEmail(rs.getString("email"));
 		tk.setDiachi(rs.getString("diachi"));
 		tk.setVaitro(rs.getString("vaitro"));
+		tk.setHinhanh((Blob)rs.getBlob("hinhanh"));
     	return tk;
     }
 }

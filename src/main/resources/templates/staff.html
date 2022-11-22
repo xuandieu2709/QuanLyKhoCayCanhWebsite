@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="images/logo2.ico" type="image/x-icon">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.js"
+		integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+	<!-- Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/manager.css">
+	<title>Thông tin nhân viên</title>
+</head>
+
+<body>
+	<!-- HEADER -->
+	<nav class="navbar navbar-expand-xl bg-dark navbar-bonsai">
+		<a class="navbar-brand" href="manager-bonsai"><img src="images/logo2.jpg" alt=""></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon" style="color: #FFF;"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
+			<ul class="navbar-nav">
+				<li th:if="${session.Role == '0'}" class="nav-item">
+					<div class="row col-12 btn-group">
+						<a class="nav-link active" href="manager-user"><i class="fa fa-id-card" aria-hidden="true"></i>
+							<br> Nhân viên</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<div class="row col-12 btn-group">
+						<a class="nav-link" href="manager-bonsai"><i class="fa fa-tree" aria-hidden="true"></i><br> Cây
+							cảnh</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<div class="row col-12">
+						<a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br>
+							Phiếu nhập</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<div class="row col-12">
+						<a class="nav-link" href="manager-export"><i class="fa fa-paper-plane"
+								aria-hidden="true"></i><br>Phiếu
+							xuất</a>
+					</div>
+				</li>
+				<li th:if="${session.Role == '0' || session.Role == '1'}" class="nav-item ">
+					<div class="row col-12">
+						<a class="nav-link" href="manager-report"><i class="fa fa-flag" aria-hidden="true"></i><br> Báo
+							cáo</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<div class="row col-12 dropdown">
+						<a style="cursor: pointer;" class="nav-link" data-toggle="dropdown"><i class="fa fa-user-circle"
+								aria-hidden="true"></i><br>
+							<h6 th:text="${session.Account}" id=""></h6>
+						</a>
+						<ul class="dropdown-menu bg-danger text-light">
+							<li th:onclick="load_infor()" class="text-center mt-3 mb-3"><a href="#"
+									data-target="#inforCard" data-toggle="modal">Thông tin</a></li>
+							<li class="text-center mt-3 mb-3"><a href="#" data-target="#changePassword"
+									data-toggle="modal">Đổi mật khẩu</a></li>
+							<div class="dropdown-divider"></div>
+							<li class="text-center mt-3 mb-3"><a th:href="@{/logout}">Đăng xuất</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<!-- END HEADER -->
+
+	<!-- END HEADER -->
+	<div class="modal" id="inforCard">
+		<script>
+			function load_infor() {
+				//alert('hi')
+				$.ajax({
+					type: "POST",
+					url: "/load-modal-infor-user",
+					success: function (data) {
+						$('#infor').replaceWith(data);
+
+					},
+				});
+			}
+		</script>
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h2 class="modal-title">Thông tin cá nhân</h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body" id="infor">
+					<div class="row" th:each="user : ${user}">
+						<div class="col-8">
+							<img th:src="@{${'/load-image-user/'+ user.taikhoan}}"
+								style="border-radius: 20px; border: 4px solid #009b77;" class="img-fluid" alt=""
+								height="280" width="280">
+						</div>
+						<div class="col-4"></div>
+						<div class="col-12">
+							<h2>Thông tin nhân viên</h2>
+							<hr class="bg-danger" style="height: 4px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Họ và tên nhân viên</h4>
+							<h5 class="pl-2" th:text="${user.hotennv}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Ngày sinh</h4>
+							<h5 class="pl-2" th:text="${user.ngaysinh}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Giới tính</h4>
+							<h5 class="pl-2" th:text="${user.gioitinh}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Chức vụ</h4>
+							<!-- <h5 class="pl-2" th:text="${user.chucvu}"></h5>  -->
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Số điện thoại</h4>
+							<h5 class="pl-2" th:text="${user.sdt}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Email</h4>
+							<h5 class="pl-2" th:text="${user.email}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-12">
+							<h4 class="pl-2">Địa chỉ</h4>
+							<h5 class="pl-2" th:text="${user.diachi}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Đóng</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Change Password -->
+	<div class="modal" id="changePassword">
+
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header" style="background-color: #009b77;">
+					<h2 class="modal-title">Đổi mật khẩu</h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<!-- Modal body -->
+				<div class="modal-body" style="background-color: #ff9933;">
+					<div class="row">
+						<div class="col-12 pl-5 pr-5">
+							<h4>Mật khẩu cũ</h4>
+							<input type="text" id="" class="input-group border-info">
+						</div>
+						<div class="col-12 pl-5 pr-5">
+							<h4>Mật khẩu mới</h4>
+							<input type="text" id="" class="input-group border-info">
+						</div>
+						<div class="col-12 pl-5 pr-5">
+							<h4>Xác nhận mật khẩu</h4>
+							<input type="text" id="" class="input-group border-info">
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer" style="background-color: #daaa79;">
+					<button class="btn btn-success" type="button">Xác nhận</button>
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Đóng</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!--  -->
+	<!--  -->
+	<div class="container">
+		<!-- Tab panes -->
+		<h2 class="mt-4"><i class="fa fa-book" aria-hidden="true"></i> Quản lý nhân viên</h2>
+		<hr class="bg-info mb-2">
+		<div class="tab-content">
+			<div class="tab-pane active container" id="user">
+				<div class="row top-body col-12 mb-4">
+					<div class="col-7 mb-0">
+						<div class="input-group justify-content-center text-center">
+							<input th:onkeyup="search()" class="input-group p-2" id="keyword" name="keyword" type="text"
+								value="">
+						</div>
+					</div>
+					<div class="col-2 justify-content-center mb-0">
+						<button class="btn btn-search mb-0 mt-1" id="btnSearch">
+							<i class="fa fa-search" style="font-size: 20px;"></i>
+						</button>
+					</div>
+					<div class="col-3 justify-content-center d-block">
+						<button class="btn btn-info btn-group float-right" data-toggle="modal" data-target="#add">Thêm
+							mới</button>
+					</div>
+				</div>
+				<hr class="bg-info mb-4">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th hidden>Tài khoản</th>
+							<th hidden>Mật khẩu</th>
+							<th>STT</th>
+							<th>Họ tên</th>
+							<th>Ngày sinh</th>
+							<th>Giới tính</th>
+							<th>Số điện thoại</th>
+							<th>Địa chỉ</th>
+							<th hidden>Vai trò</th>
+							<th>Email</th>
+							<th>Hình ảnh</th>
+						</tr>
+					</thead>
+					<tbody id="reloaduser">
+						<tr th:each="user: ${listTK}">
+							<td hidden th:text="${user.taikhoan}"></td>
+							<td hidden th:text="${user.matkhau}"></td>
+							<td th:text="${(userStat.index)+1}"></td>
+							<td th:text="${user.hotennv}"></td>
+							<td th:text="${user.ngaysinh}"></td>
+							<th:block>
+							<td th:if="${user.gioitinh == '1'}" th:text="Nam"></td>
+							</th:block>
+							<th:block>
+							<td th:if="${user.gioitinh == '2'}" th:text="Nữ"></td>
+							</th:block>
+							<th:block>
+							<td th:if="${user.gioitinh == '3'}" th:text="Không+' '+xác+' '+định"></td>
+							</th:block>
+							<td th:text="${user.sdt}"></td>
+							<td th:text="${user.diachi}"></td>
+							<td hidden th:text="${user.vaitro == 1?'Nhân Viên':'Admin'}"></td>
+							<td th:text="${user.email}"></td>
+							<td><img th:src="@{${'/load-image-user/'+ user.taikhoan}}" height="50px" width="50px"
+									alt="">
+							</td>
+							<th><button th:onclick="sua_user([[${user.taikhoan}]])"
+									class="btn btn-warning justify-content-center m-auto" data-toggle="modal"
+									data-target="#edit">
+									<i class="fa fa-edit"></i>
+								</button></th>
+							<th><button th:onclick="return xoa_user([[${user.taikhoan}]])"
+									class="btn btn-danger justify-content-center m-auto" data-toggle="modal">
+									<i class="fa fa-remove"></i>
+								</button></th>
+						</tr>
+						<td colspan="10" class="text-center" style="color: #009b77; font-weight: 600; font-size: 40px;" th:text="${messSreach}"></td>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- The Modal -->
+	<div class="modal" id="add">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<form th:action="@{/manager-addUser}" method="post" enctype="multipart/form-data">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h2 class="modal-title">Thêm mới</h2>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<script>
+						function checkTK() {
+							var taikhoan = $('#add #taikhoan').val();
+							$.ajax({
+								type: "Post",
+								url: "/checkTaiKhoan",
+								data: "taikhoan=" + taikhoan,
+								success: function (data) {
+									$('#add #tendangnhap').replaceWith(data);
+									$('#add #taikhoan').focus();
+								},
+								error: function (data) {
+									alert('Lỗi!');
+								}
+							});
+						}
+					</script>
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-12 mb-2 mt-2" id="tendangnhap">
+								<h4>Tài khoản</h4>
+								<label for="" id="messAccount"></label>
+								<input type="text" maxlength="25" id="taikhoan" name="taikhoan" class="input-group"
+									required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Mật khẩu</h4>
+								<input type="text" minlength="8" maxlength="25" name="matkhau" class="input-group"
+									required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Họ tên</h4>
+								<input type="text" name="hotennv" class="input-group" required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Ngày sinh</h4>
+								<input type="date" name="ngaysinh" class="input-group" required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Giới tính</h4>
+								<select class="input-group pt-2 pb-2" id="gioitinh" name="gioitinh" required>
+									<option value="" selected disabled>-- Lựa chọn --</option>
+									<option value="1">Nam</option>
+									<option value="2">Nữ</option>
+									<option value="3">Không xác định</option>
+								</select>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Số điện thoại</h4>
+								<input type="text" maxlength="11" name="sdt" class="input-group" required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Địa chỉ</h4>
+								<input type="text" name="diachi" class="input-group" required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Vai trò</h4>
+								<select class="input-group pt-2 pb-2" id="vaitro" name="vaitro" required>
+									<option value="" selected disabled>-- Lựa chọn --</option>
+									<option value="0">Admin</option>
+									<option value="1">Thủ Kho</option>
+									<option value="2">Nhân Viên</option>
+								</select>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Email</h4>
+								<input type="email" name="email" class="input-group" required>
+							</div>
+							<div class="col-12 mb-2 mt-2">
+								<h4>Hình ảnh</h4>
+								<div class="image-input">
+									<input type="file" class="imageInput btn-info" th:name="photo"
+										accept="image/*"><br><img src="" width="100px" height="100px"
+										class="image-preview mt-2">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button class="btn btn-info" type="submit">Xác nhận</button>
+						<button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Edit modal -->
+	<!-- The Modal -->
+	<div class="modal" id="edit">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<form th:action="@{/sua_user}" method="post" enctype="multipart/form-data">
+
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h2 class="modal-title">Chỉnh sửa</h2>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body" id="sua_user">
+						<div class="row" th:each="user : ${users}" th:object="${users}">
+							<div class="col-12 mb-2 mt-2">
+								<h4>Tài khoản</h4>
+								<input name="taikhoan" th:value="${user.taikhoan}" class="input-group"
+									readonly="readonly">
+							</div>
+							<div class="col-12 mb-2 mt-2">
+								<h4>Mật khẩu</h4>
+								<input type="password" name="matkhau" th:value="${user.matkhau}" class="input-group">
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Họ tên</h4>
+								<input type="text" name="hotennv" th:value="${user.hotennv}" class="input-group">
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Ngày sinh</h4>
+								<input type="date" name="ngaysinh" th:value="${user.ngaysinh}" class="input-group" required>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Giới tính</h4>
+								<select class="input-group pt-2 pb-2" id="gioitinh" name="gioitinh" required>
+									<th:block th:if="${user.gioitinh  == '1'}">
+										<option style="color: red;" selected value="1">Nam</option>
+										<option value="2">Nữ</option>
+										<option value="3">Không xác định</option>
+									</th:block>
+									<th:block th:if="${user.gioitinh  == '2'}">
+										<option style="color: red;" selected value="2">Nữ</option>
+										<option value="1">Nam</option>
+										<option value="3">Không xác định</option>
+									</th:block>
+									<th:block th:if="${user.gioitinh  == '3'}">
+										<option style="color: red;" selected value="3">Không xác định</option>
+										<option value="1">Nam</option>
+										<option value="2">Nữ</option>
+									</th:block>
+								</select>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Số điện thoại</h4>
+								<input type="text" maxlength="11" name="sdt" th:value="${user.sdt}" class="input-group">
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Vai trò</h4>
+								<select class="input-group pt-2 pb-2" id="vaitro" name="vaitro" required>
+									<th:block th:if="${user.vaitro == '0'}">
+										<option style="color: red;" selected value="0">Admin</option>
+										<option value="1">Thủ Kho</option>
+										<option value="2">Nhân Viên</option>
+									</th:block>
+									<th:block th:if="${user.vaitro == '1'}">
+										<option value="0">Admin</option>
+										<option style="color: red;" selected value="1">Thủ Kho</option>
+										<option value="2">Nhân Viên</option>
+									</th:block>
+									<th:block th:if="${user.vaitro == '2'}">
+										<option value="0">Admin</option>
+										<option value="1">Thủ Kho</option>
+										<option  style="color: red;" selected value="2">Nhân Viên</option>
+									</th:block>
+								</select>
+							</div>
+							<div class="col-6 mb-2 mt-2">
+								<h4>Email</h4>
+								<input type="text" name="email" th:value="${user.email}"
+									class="input-group">
+							</div>
+							<div class="col-12 mb-2 mt-2">
+								<h4>Địa chỉ</h4>
+								<input type="text" name="diachi" th:value="${user.diachi}" class="input-group">
+							</div>
+							<div class="col-12 mb-2 mt-2">
+								<h4>Hình ảnh</h4>
+								<div class="image-input">
+									<input type='file' id="file-input" th:onchange="change_image()" th:name="photo"
+										class="input-group btn-info" /> <img id="image-preview mt-2" alt="your image"
+										width="100px" height="100px" title='' style="display: none" /> <img
+										th:src="@{${'/load-image-user/'+user.taikhoan}}" id="image" width="100px"
+										height="100px" alt="">
+									<script>
+										function readURL(input) {
+											if (input.files && input.files[0]) {
+												var reader = new FileReader();
+												reader.onload = function (e) {
+													$('#image-preview').attr(
+														'src',
+														e.target.result);
+													$('#image-preview').hide();
+													$('#image-preview').fadeIn(
+														650);
+													$('#image-preview').css(
+														'display', 'block')
+													$('#image').css('display',
+														'none');
+												}
+												reader
+													.readAsDataURL(input.files[0]);
+											}
+										}
+										$("#file-input").change(function () {
+											readURL(this);
+										});
+									</script>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button class="btn btn-info" type="submit">Xác nhận</button>
+						<button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+					</div>
+
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<!--  -->
+	<!-- Remove modal -->
+	<!-- The Modal -->
+	<div class="modal" id="remove">
+
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h2 class="modal-title">Xóa thông tin người dùng</h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-12">
+							<h2 style="color: red;">Bạn có muốn xóa người dùng này ko?</h2>
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button class="btn btn-info" id="btn-xac-nhan" data-toggle="modal" th:onclick="xoa_user()"
+						type="button">Xác nhận</button>
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Hủy</button>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!--  -->
+	<!-- The Modal -->
+
+	<!-- Edit modal -->
+	<!-- The Modal -->
+
+	<!--  -->
+	<!-- Remove modal -->
+	<!-- The Modal -->
+
+	<!--  -->
+	<!-- Nav tabs -->
+	<main>
+		<script>
+			$(document).ready(function () {
+				$('#btnSearch').on('click', function (event) {
+					var key = $('#keyword').val();
+					if (key === null || key === "") {
+						alert("Hãy nhập gì đó vào thanh tìm kiếm!");
+					}
+				});
+				$('.imageInput').on('change', function () {
+					$input = $(this);
+					if ($input.val().length > 0) {
+						fileReader = new FileReader();
+						fileReader.onload = function (data) {
+							$('.image-preview').attr('src', data.target.result);
+						}
+						fileReader.readAsDataURL($input.prop('files')[0]);
+						$('.image-button').css('display', 'none');
+						$('.image-preview').css('display', 'block');
+						$('.change-image').css('display', 'block');
+					}
+				});
+
+				$('.change-image').on('click', function () {
+					$control = $(this);
+					$('#imageInput').val('');
+					$preview = $('.image-preview');
+					$preview.attr('src', '');
+					$preview.css('display', 'none');
+					$control.css('display', 'none');
+					$('.image-button').css('display', 'block');
+				});
+
+			});
+		</script>
+		<script>
+
+
+			function sua_user(taikhoan) {
+
+				$.ajax({
+					type: "POST",
+					url: "/load-modal-sua-user",
+					data: "taikhoan=" + taikhoan,
+					success: function (data) {
+						$('#sua_user').replaceWith(data);
+
+					},
+					error: function (data) {
+						alert('Lỗi!');
+						console.log(taikhoan);
+					}
+				});
+			}
+
+			function open_modal_xoa(taikhoan) {
+				$('#remove').css('display', 'block');
+				$('#btn-xac-nhan').val(taikhoan);
+			}
+			function xoa_user(taikhoan) {
+				if (confirm('Bạn có muốn xoá : ' + taikhoan + ' không?')) {
+					$.ajax({
+						type: "POST",
+						url: "/xoa_user",
+						data: "taikhoan =" + taikhoan,
+						success: function (data) {
+							alert('Xoá thành công!');
+							$('#reloaduser').replaceWith(data);
+						},
+						error: function (data) {
+							alert("lỗi!");
+						}
+					});
+				} else {
+					return false;
+				}
+			}
+		</script>
+		<script>
+
+			function search() {
+				var key = $('#keyword').val();
+				setTimeout(1000);
+				$.ajax({
+					type: "POST",
+					url: "/manager-user/search_user",
+					data: "keyword=" + key,
+					success: function (data) {
+						$('#reloaduser').replaceWith(data);
+						$('#keyword').val(key);
+					},
+					error: function (data) {
+						alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
+					}
+				});
+			}
+
+
+
+		</script>
+	</main>
+</body>
+
+</html>

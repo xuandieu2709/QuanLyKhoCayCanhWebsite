@@ -1,5 +1,9 @@
 package com.treemanage.Entity;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.mysql.cj.jdbc.Blob;
+
 public class taikhoan {
     private String taikhoan;
     private String matkhau;
@@ -10,6 +14,8 @@ public class taikhoan {
 	private String email;
 	private String diachi;
 	private String vaitro;
+	private Blob hinhanh;
+	private MultipartFile photo;
     public taikhoan() {
     	
     }
@@ -19,7 +25,7 @@ public class taikhoan {
 		this.matkhau = matkhau;
 	}
 
-	public taikhoan(String taikhoan, String matkhau, String hotennv, String ngaysinh, String gioitinh, String sdt, String email, String diachi, String vaitro) {
+	public taikhoan(String taikhoan, String matkhau, String hotennv, String ngaysinh, String gioitinh, String sdt, String email, String diachi, String vaitro,Blob hinhanh) {
 		this.taikhoan = taikhoan;
 		this.matkhau = matkhau;
 		this.hotennv = hotennv;
@@ -29,9 +35,16 @@ public class taikhoan {
 		this.email = email;
 		this.diachi = diachi;
 		this.vaitro = vaitro;
+		this.hinhanh=hinhanh;
 	}
 
-	
+	public MultipartFile getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(MultipartFile photo) {
+        this.photo = photo;
+    }
 	public String getTaikhoan() {
 		return taikhoan;
 	}
@@ -100,22 +113,22 @@ public class taikhoan {
 	public void setVaitro(String vaitro) {
 		this.vaitro = vaitro;
 	}
+	public Blob getHinhanh() {
+		return this.hinhanh;
+	}
 
-
+	public void setHinhanh(Blob hinhanh) {
+		this.hinhanh = hinhanh;
+	}
 	@Override
 	public String toString() {
-		return "{" +
-			" taikhoan='" + getTaikhoan() + "'" +
-			", matkhau='" + getMatkhau() + "'" +
-			", hotennv='" + getHotennv() + "'" +
-			", ngaysinh='" + getNgaysinh() + "'" +
-			", gioitinh='" + getGioitinh() + "'" +
-			", sdt='" + getSdt() + "'" +
-			", email='" + getEmail() + "'" +
-			", diachi='" + getDiachi() + "'" +
-			", vaitro='" + getVaitro() + "'" +
-			"}";
+		return "taikhoan [taikhoan=" + taikhoan + ", matkhau=" + matkhau + ", hotennv=" + hotennv + ", ngaysinh="
+				+ ngaysinh + ", gioitinh=" + gioitinh + ", sdt=" + sdt + ", email=" + email + ", diachi=" + diachi
+				+ ", vaitro=" + vaitro + ", hinhanh=" + hinhanh + "]";
 	}
+	
+    
+	
 	
 
     

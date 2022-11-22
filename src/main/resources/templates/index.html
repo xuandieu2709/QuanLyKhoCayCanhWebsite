@@ -25,22 +25,28 @@
 
 <body>
 	<!-- HEADER -->
-	<nav class="navbar navbar-expand-lg bg-dark navbar-bonsai">
+	<nav class="navbar navbar-expand-xl bg-dark navbar-bonsai">
 		<a class="navbar-brand" href="manager-bonsai"><img src="images/logo2.jpg" alt=""></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon" style="color: #FFF;"></span>
 		</button>
 		<div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
 			<ul class="navbar-nav">
-				<li class="nav-item active">
+				<li th:if="${session.Role == '0'}" class="nav-item">
+					<div class="row col-12 btn-group">
+						<a class="nav-link" href="manager-user"><i class="fa fa-id-card" aria-hidden="true"></i>
+							<br> Nhân viên</a>
+					</div>
+				</li>
+				<li class="nav-item">
 					<div class="row col-12 btn-group">
 						<a class="nav-link active" href="manager-bonsai"><i class="fa fa-tree"
 								aria-hidden="true"></i><br> Cây cảnh</a>
 					</div>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item ">
 					<div class="row col-12">
-						<a class="nav-link" href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br>
+						<a class="nav-link " href="manager-import"><i class="fa fa-book" aria-hidden="true"></i><br>
 							Phiếu nhập</a>
 					</div>
 				</li>
@@ -51,16 +57,176 @@
 							xuất</a>
 					</div>
 				</li>
-				<li class="nav-item">
+				<li th:if="${session.Role == '0' || session.Role == '1'}" class="nav-item ">
 					<div class="row col-12">
 						<a class="nav-link" href="manager-report"><i class="fa fa-flag" aria-hidden="true"></i><br> Báo
 							cáo</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<div class="row col-12 dropdown">
+						<a style="cursor: pointer;" class="nav-link" data-toggle="dropdown"><i class="fa fa-user-circle"
+								aria-hidden="true"></i><br>
+							<h6 th:text="${session.Account}"></h6>
+						</a>
+						<ul class="dropdown-menu bg-danger text-light">
+							<li class="text-center mt-3 mb-3"><a href="#" data-target="#inforCard"
+									data-toggle="modal">Thông tin</a></li>
+							<li class="text-center mt-3 mb-3"><a href="#" data-target="#changePassword"
+									data-toggle="modal">Đổi mật khẩu</a></li>
+							<div class="dropdown-divider"></div>
+							<li class="text-center mt-3 mb-3"><a th:href="@{/logout}">Đăng xuất</a></li>
+						</ul>
 					</div>
 				</li>
 			</ul>
 		</div>
 	</nav>
 	<!-- END HEADER -->
+
+	<div class="modal" id="inforCard">
+		<script>
+			function load_infor() {
+				$.ajax({
+					type: "POST",
+					url: "/load-modal-infor-user",
+					success: function (data) {
+						$('#infor').replaceWith(data);
+
+					},
+				});
+			}
+		</script>
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h2 class="modal-title">Thông tin cá nhân</h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="row" id="infor" th:each="user : ${user}">
+						<!-- <div class="col-8">
+							   <img th:src="@{${'/load-image-user/'+ user.taikhoan}}" style="border-radius: 20px; border: 4px solid #009b77;" class="img-fluid"  alt=""
+								  height="280" width="280"> 
+						  </div> -->
+						<div class="col-4"></div>
+						<div class="col-12">
+							<h2>Thông tin nhân viên</h2>
+							<hr class="bg-danger" style="height: 4px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Họ và tên nhân viên</h4>
+							<h5 class="pl-2" th:text="${user.hotennv}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Ngày sinh</h4>
+							<h5 class="pl-2" th:text="${user.ngaysinh}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Giới tính</h4>
+							<h5 class="pl-2" th:text="${user.gioitinh}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Chức vụ</h4>
+							<!-- <h5 class="pl-2" th:text="${user.chucvu}"></h5>  -->
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Số điện thoại</h4>
+							<h5 class="pl-2" th:text="${user.sdt}"></h5>
+						</div>
+						<div class="col-6">
+							<h4 class="pl-2">Email</h4>
+							<h5 class="pl-2" th:text="${user.email}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+						<div class="col-12">
+							<h4 class="pl-2">Địa chỉ</h4>
+							<h5 class="pl-2" th:text="${user.diachi}"></h5>
+						</div>
+						<div class="col-12">
+							<hr class="bg-success" style="height: 2px;">
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Đóng</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Change Password -->
+	<div class="modal" id="changePassword">
+
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header" style="background-color: #009b77;">
+					<h2 class="modal-title">Đổi mật khẩu</h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<script>
+					function changePass() {
+						var passOld = $('#passold').val();
+						var passNew = $('#passnew').val();
+						alert(passOld)
+						alert(passNew)
+						$.ajax({
+							type: "POST",
+							url: "/changePassWord",
+							data: "passOld=" + passOld, "passNew=": passNew,
+							success: function (data) {
+								alert("Cập nhật mật khẩu thành công!")
+							},
+							error: function (data) {
+								alert("Có gì đó không đúng!\n Vui lòng thử lại sau.");
+							}
+						});
+					}
+				</script>
+				<!-- Modal body -->
+				<div class="modal-body" style="background-color: #ff9933;">
+					<div class="row" id="ChangPassWord">
+						<div class="col-12 pl-5 pr-5">
+							<h4>Mật khẩu cũ</h4>
+							<input type="text" id="passold" class="input-group border-info">
+						</div>
+						<div class="col-12 pl-5 pr-5">
+							<h4>Mật khẩu mới</h4>
+							<input type="text" id="passnew" class="input-group border-info">
+						</div>
+						<div class="col-12 pl-5 pr-5">
+							<h4>Xác nhận mật khẩu</h4>
+							<input type="text" id="confirmpass" class="input-group border-info">
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer" style="background-color: #daaa79;">
+					<button th:onclick="changePass()" class="btn btn-success" type="button">Xác nhận</button>
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Đóng</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!--  -->
 	<!--  -->
 	<div class="container">
 		<ul class="nav nav-tabs mt-2 mb-4">
@@ -69,6 +235,9 @@
 			<li class="nav-item" id="btntabncc"><a class="nav-link" data-toggle="tab" href="#tabnhacungcap"><i
 						class="fa fa-truck" aria-hidden="true"></i><br>
 					Nhà cung cấp</a></li>
+			<li class="nav-item" id="btntablc"><a class="nav-link" data-toggle="tab" href="#tabloaicay"><i
+						class="fa fa-tree" aria-hidden="true"></i><br>
+					Loại cây</a></li>
 		</ul>
 
 		<!-- Tab panes -->
@@ -198,6 +367,7 @@
 					});
 				</script>
 				<hr class="bg-info mb-4">
+
 				<table class="table table-bordered table-hover">
 					<thead>
 						<tr>
@@ -215,7 +385,12 @@
 							<td th:text="${(cayStat.index)+1}"></td>
 							<td th:text="${cay.tencay}"></td>
 							<td th:text="${#numbers.formatDecimal(cay.giacay, 0, 'COMMA', 0, 'POINT')}"></td>
-							<td th:text="${cay.tonkho}"></td>
+							<th:block th:if="${cay.tonkho == 0}">
+								<td style="color: red;" th:text="Hết+' '+hàng"></td>
+							</th:block>
+							<th:block th:unless="${cay.tonkho == 0}">
+								<td th:text="${cay.tonkho}"></td>
+							</th:block>
 							<td><img th:src="@{${'/load-image-cay/'+cay.macay}}" height="50px" width="50px" alt=""></td>
 							<td th:text="${cay.mota}"></td>
 							<td th:text="${cay.dvt}"></td>
@@ -229,6 +404,7 @@
 									<i class="fa fa-remove"></i>
 								</button></th>
 						</tr>
+						<td colspan="9" class="text-center" style="color: #009b77; font-weight: 600; font-size: 40px;" th:text="${messSreach}"></td>
 					</tbody>
 				</table>
 			</div>
@@ -289,6 +465,55 @@
 					</tbody>
 				</table>
 			</div>
+			<div class="tab-pane container" id="tabloaicay">
+				<div class="row top-body col-12 mb-4">
+
+
+					<div class="col-7 mb-0">
+						<div class="input-group justify-content-center text-center">
+							<input th:onkeyup="searchs()" class="input-group p-2" id="keywords" name="keywords"
+								type="text" value="">
+						</div>
+					</div>
+					<div class="col-2 justify-content-center mb-0">
+						<button class="btn btn-search mb-0 mt-1" id="btnSearchncc">
+							<i class="fa fa-search" style="font-size: 20px;"></i>
+						</button>
+					</div>
+
+
+					<div class="col-3 justify-content-center d-block">
+						<button class="btn btn-info btn-group float-right" data-toggle="modal"
+							data-target="#ThemLoaiCay">Thêm mới</button>
+					</div>
+				</div>
+				<hr class="bg-info mb-4">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>STT</th>
+							<th>Tên loại cây</th>
+
+						</tr>
+					</thead>
+					<tbody id="reloadloaicay">
+						<tr th:each="loaicay : ${listLoaiCay}">
+							<td th:text="${(loaicayStat.index)+1}"></td>
+							<td th:text="${loaicay.tenloai}"></td>
+
+							<th><button th:onclick="'sua_loaicay('+${loaicay.maloai}+')'"
+									class="btn btn-warning justify-content-center m-auto" data-toggle="modal"
+									data-target="#editloaicay">
+									<i class="fa fa-edit"></i>
+								</button></th>
+							<th><button th:onclick="'return xoa_loaicay('+${loaicay.maloai}+')'" data-toggle="modal"
+									class="btn btn-danger justify-content-center m-auto">
+									<i class="fa fa-remove"></i>
+								</button></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	<!-- The Modal -->
@@ -316,18 +541,20 @@
 							</div>
 							<div class="col-6">
 								<h4>Tồn kho</h4>
-								<input min="1" max="500" type="number" name="tonkho" class="input-group" required>
+								<input min="0" value="0" max="500" type="number" name="tonkho" class="input-group"
+									readonly>
 							</div>
 							<div class="col-12">
 								<h4>Hình ảnh</h4>
 								<div class="image-input">
-									<input type="file" class="imageInput btn-info" th:name="photo" accept="image/*"><br><img
-										src="" width="100px" height="100px" class="image-preview mt-2">
+									<input type="file" class="imageInput btn-info" th:name="photo"
+										accept="image/*"><br><img src="" width="100px" height="100px"
+										class="image-preview mt-2">
 								</div>
 							</div>
 							<div class="col-12">
 								<h4>Mô tả</h4>
-								<textarea type="text" name="mota" class="input-group" rows="5" ></textarea>
+								<textarea type="text" name="mota" class="input-group" rows="5"></textarea>
 							</div>
 							<div class="col-6">
 								<h4>Đơn vị tính</h4>
@@ -378,22 +605,24 @@
 							</div>
 							<div class="col-12">
 								<h4>Tên cây cảnh</h4>
-								<input type="text" name="tencay" th:value="${cay.tencay}" class="input-group" >
+								<input type="text" name="tencay" th:value="${cay.tencay}" class="input-group">
 							</div>
 							<div class="col-6">
 								<h4>Giá cây</h4>
-								<input type="number" min="1000" name="giacay" th:value="${cay.giacay}" class="input-group" required>
+								<input type="number" min="1000" name="giacay" th:value="${cay.giacay}"
+									class="input-group" required>
 							</div>
 							<div class="col-6">
 								<h4>Tồn kho</h4>
-								<input type="number" min="0" max="500" name="tonkho" th:value="${cay.tonkho}" class="input-group" required>
+								<input type="number" value="0" min="0" max="500" name="tonkho" th:value="${cay.tonkho}"
+									class="input-group" readonly>
 							</div>
 							<div class="col-12">
 								<h4>Hình ảnh</h4>
 								<div class="image-input">
 									<input type='file' id="file-input" th:onchange="change_image()" th:name="photo"
-										class="input-group btn-info" /> <img id="image-preview mt-2" alt="your image" width="100px"
-										height="100px" title='' style="display: none" /> <img
+										class="input-group btn-info" /> <img id="image-preview mt-2" alt="your image"
+										width="100px" height="100px" title='' style="display: none" /> <img
 										th:src="@{${'/load-image-cay/'+cay.macay}}" id="image" width="100px"
 										height="100px" alt="">
 									<script>
@@ -424,7 +653,8 @@
 							</div>
 							<div class="col-12">
 								<h4>Mô tả</h4>
-								<textarea type="text" rows="5" name="mota" th:value="${cay.mota}" class="input-group"></textarea>
+								<textarea type="text" rows="5" name="mota" th:text="${cay.mota}"
+									class="input-group"></textarea>
 							</div>
 							<div class="col-6">
 								<h4>Đơn vị tính</h4>
@@ -562,7 +792,7 @@
 					<div class="modal-body" id="sua_nhacungcap">
 						<div class="row" th:each="ncc : ${nhacungcap}">
 							<div class="col-12" hidden>
-								<h4>Ma nhà cung cấp</h4>
+								<h4>Mã nhà cung cấp</h4>
 								<input name="manhacungcap" th:value="${ncc.manhacungcap}" class="input-group">
 							</div>
 							<div class="col-12">
@@ -625,6 +855,113 @@
 				<!-- Modal footer -->
 				<div class="modal-footer">
 					<button class="btn btn-info" id="btn-xac-nhans" data-toggle="modal" th:onclick="xoa_nhacungcap()"
+						type="button">Xác nhận</button>
+					<button class="btn btn-danger" type="button" data-dismiss="modal">Hủy</button>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!--  -->
+	<!-- The Modal -->
+	<div class="modal" id="ThemLoaiCay">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<form th:action="@{/manager-addLoaicay}" method="post">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h2 class="modal-title">Thêm mới loại cây</h2>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-12">
+								<h4>Tên loại cây</h4>
+								<input type="text" name="tenloai" class="input-group">
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button class="btn btn-info" type="submit">Xác nhận</button>
+						<button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Edit modal -->
+	<!-- The Modal -->
+	<div class="modal" id="editloaicay">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<form th:action="@{/sua-loaicay}" method="post">
+
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h2 class="modal-title">Chỉnh sửa loại cây</h2>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body" id="sua_loaicay">
+						<div class="row" th:each="lc : ${loaicays}">
+							<div class="col-12" hidden>
+								<h4>Mã loại cây</h4>
+								<input name="maloai" th:value="${lc.maloai}" class="input-group">
+							</div>
+							<div class="col-12">
+								<h4>Tên loại cây</h4>
+								<input name="tenloai" th:value="${lc.tenloai}" class="input-group">
+							</div>
+
+						</div>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button class="btn btn-info" type="submit">Xác nhận</button>
+						<button class="btn btn-danger" data-dismiss="modal">Hủy</button>
+					</div>
+
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<!--  -->
+	<!-- Remove modal -->
+	<!-- The Modal -->
+	<div class="modal" id="remove">
+
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h2 class="modal-title">Xóa loại cây </h2>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-12">
+							<h2 style="color: red;">Bạn có muốn xóa loại cây này không?</h2>
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button class="btn btn-info" id="btn-xac-nhann" data-toggle="modal" th:onclick="xoa_loaicay()"
 						type="button">Xác nhận</button>
 					<button class="btn btn-danger" type="button" data-dismiss="modal">Hủy</button>
 				</div>
@@ -720,6 +1057,22 @@
 					}
 				});
 			}
+			function sua_loaicay(maloai) {
+				$.ajax({
+					type: "POST",
+					url: "/load-modal-sualoaicay",
+					data: "maloai=" + maloai,
+					success: function (data) {
+
+						$('#btntablc').click();
+						$('#sua_loaicay').replaceWith(data);
+
+					},
+					error: function (data) {
+						alert('Lỗi!');
+					}
+				});
+			}
 			function open_modal_xoa(macay) {
 				$('#remove').css('display', 'block');
 				$('#btn-xac-nhan').val(macay);
@@ -787,6 +1140,28 @@
 						success: function (data) {
 							alert('Xoá thành công!');
 							$('#nhacungcap').replaceWith(data);
+						},
+						error: function (data) {
+							alert("Xoá thất bại!\n Vui lòng thử lại sau.");
+						}
+					});
+				} else {
+					return false;
+				}
+			}
+			function open_modal_xoa(maloai) {
+				$('#remove').css('display', 'block');
+				$('#btn-xac-nhann').val(maloai);
+			}
+			function xoa_loaicay(maloai) {
+				if (confirm('Bạn có muốn xoá loại cây có mã: ' + maloai + ' không?')) {
+					$.ajax({
+						type: "POST",
+						url: "/xoa_loaicay",
+						data: "maloai=" + maloai,
+						success: function (data) {
+							alert('Xoá thành công!');
+							$('#reloadloaicay').replaceWith(data);
 						},
 						error: function (data) {
 							alert("lỗi!");

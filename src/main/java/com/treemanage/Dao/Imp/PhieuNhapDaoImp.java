@@ -18,7 +18,7 @@ public class PhieuNhapDaoImp implements PhieuNhapDao {
 
     @Override
     public List<PhieuNhap> showList(){
-        String sql = "Select * from phieunhap";
+        String sql = "Select * from phieunhap Order by maphieunhap  DESC";
         List<PhieuNhap> list = jdbcTemplate.query(sql, new PhieuNhapMapper());
         return list;
     }

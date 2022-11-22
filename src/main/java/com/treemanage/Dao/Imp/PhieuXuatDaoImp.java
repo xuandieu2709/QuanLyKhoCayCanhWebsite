@@ -17,7 +17,7 @@ public class PhieuXuatDaoImp implements PhieuXuatDao {
 
     @Override
     public List<PhieuXuat> showList() {
-        String sql = "Select * from phieuxuat";
+        String sql = "Select * from phieuxuat Order by maphieuxuat DESC";
         List<PhieuXuat> list = jdbcTemplate.query(sql, new PhieuXuatMapper());
         return list;
     }

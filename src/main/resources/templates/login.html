@@ -17,11 +17,11 @@
         <h4 th:text="${messTB}"></h4>
         <form method="post" th:action="@{/login}">
             <div class="user-box">
-                <input type="text" name="taikhoan" id="taikhoan" value="" required="">
+                <input type="text" maxlength="25" name="taikhoan" id="taikhoan" value="" required="">
                 <label>Tên đăng nhập</label>
             </div>
             <div class="user-box">
-                <input type="password" name="matkhau" id="matkhau" value="" required="">
+                <input type="password" maxlength="25" name="matkhau" id="matkhau" value="" required="">
                 <label>Mật khẩu</label>
             </div>
             <div class="user-box">
